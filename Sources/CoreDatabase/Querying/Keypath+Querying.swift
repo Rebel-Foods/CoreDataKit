@@ -23,29 +23,25 @@ public func != <T: NSManagedObject, Value: QueryableAttributeType & Equatable>(_
 public func < <T: NSManagedObject, Value: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Value>, _ value: Value) -> Where<T> {
     
     let path = keyPath._kvcKeyPathString!
-    let predicate = NSPredicate(format: "\(path) < \(value.cs_toQueryableNativeType())")
-    return Where<T>(predicate)
+    return Where<T>("%K < %@", path, value.cs_toQueryableNativeType())
 }
 
 public func <= <T: NSManagedObject, Value: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Value>, _ value: Value) -> Where<T> {
     
     let path = keyPath._kvcKeyPathString!
-    let predicate = NSPredicate(format: "\(path) <= \(value.cs_toQueryableNativeType())")
-    return Where<T>(predicate)
+    return Where<T>("%K <= %@", path, value.cs_toQueryableNativeType())
 }
 
 public func > <T: NSManagedObject, Value: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Value>, _ value: Value) -> Where<T> {
     
     let path = keyPath._kvcKeyPathString!
-    let predicate = NSPredicate(format: "\(path) > \(value.cs_toQueryableNativeType())")
-    return Where<T>(predicate)
+    return Where<T>("%K > %@", path, value.cs_toQueryableNativeType())
 }
 
 public func >= <T: NSManagedObject, Value: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Value>, _ value: Value) -> Where<T> {
     
     let path = keyPath._kvcKeyPathString!
-    let predicate = NSPredicate(format: "\(path) >= \(value.cs_toQueryableNativeType())")
-    return Where<T>(predicate)
+    return Where<T>("%K >= %@", path, value.cs_toQueryableNativeType())
 }
 
 // MARK: Optionals
@@ -64,36 +60,40 @@ public func != <T: NSManagedObject, V: QueryableAttributeType & Equatable>(_ key
 
 public func < <T: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Optional<V>>, _ value: V?) -> Where<T> {
     
+    let path = keyPath._kvcKeyPathString!
     if let value = value {
-        return Where<T>("%K < %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+        return Where<T>("%K < %@", path, value.cs_toQueryableNativeType())
     } else {
-        return Where<T>("%K < nil", keyPath._kvcKeyPathString!)
+        return Where<T>("%K < nil", path)
     }
 }
 
 public func <= <T: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Optional<V>>, _ value: V?) -> Where<T> {
     
+    let path = keyPath._kvcKeyPathString!
     if let value = value {
-        return Where<T>("%K <= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+        return Where<T>("%K <= %@", path, value.cs_toQueryableNativeType())
     } else {
-        return Where<T>("%K <= nil", keyPath._kvcKeyPathString!)
+        return Where<T>("%K <= nil", path)
     }
 }
 
 public func > <T: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Optional<V>>, _ value: V?) -> Where<T> {
     
+    let path = keyPath._kvcKeyPathString!
     if let value = value {
-        return Where<T>("%K > %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+        return Where<T>("%K > %@", path, value.cs_toQueryableNativeType())
     } else {
-        return Where<T>("%K > nil", keyPath._kvcKeyPathString!)
+        return Where<T>("%K > nil", path)
     }
 }
 
 public func >= <T: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Optional<V>>, _ value: V?) -> Where<T> {
     
+    let path = keyPath._kvcKeyPathString!
     if let value = value {
-        return Where<T>("%K >= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
+        return Where<T>("%K >= %@", path, value.cs_toQueryableNativeType())
     } else {
-        return Where<T>("%K >= nil", keyPath._kvcKeyPathString!)
+        return Where<T>("%K >= nil", path)
     }
 }
