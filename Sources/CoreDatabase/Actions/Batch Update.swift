@@ -10,9 +10,8 @@ import CoreData
 
 internal final class BatchUpdate<T: NSManagedObject> {
     
-    init(_ builder: (BatchUpdateRequest<T>) -> Void) throws {
-        let request = BatchUpdateRequest<T>()
-        builder(request)
+    init(_ builder: () -> BatchUpdateRequest<T>) throws {
+        let request = builder()
         
         try request.context.execute(request.batchUpdateRequest)
     }
