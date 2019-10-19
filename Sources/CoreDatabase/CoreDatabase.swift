@@ -27,4 +27,9 @@ public final class CoreDatabase {
     public class func performInsert<T: NSManagedObject>(_ insertions: (T, NSManagedObjectContext) -> Void) throws {
         _ = try Insert<T>(insertions)
     }
+    
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    public class func performBatchInsertions<T: NSManagedObject>(_ insertions: BatchInserts, in: T.Type) throws {
+        _ = try Insert<T>(insertions)
+    }
 }

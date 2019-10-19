@@ -166,4 +166,3 @@ public final class FetchRequest<T: NSManagedObject> {
         return self
     }
 }
-

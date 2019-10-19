@@ -8,6 +8,8 @@
 
 import CoreData
 
+public typealias BatchInserts = [[String : Any]]
+
 internal class Insert<T: NSManagedObject> {
     
     private let entity: T
@@ -24,4 +26,14 @@ internal class Insert<T: NSManagedObject> {
         insertions(entity, context)
         try context.save()
     }
+    
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    internal init(_ insertions: BatchInserts) throws {
+        entity = T(context: context)
+        let batchInsert = NSBatchInsertRequest(entity: entity.entity, objects: insertions)
+        
+        try context.execute(batchInsert)
+        try context.save()
+    }
+
 }
