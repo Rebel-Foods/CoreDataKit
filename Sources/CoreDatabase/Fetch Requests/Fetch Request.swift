@@ -19,6 +19,32 @@ public final class FetchRequest<T: NSManagedObject> {
         fetchRequest.returnsObjectsAsFaults = false
     }
     
+    // MARK: FETCH BATCH SIZE CLAUSE
+    
+    @discardableResult
+    public func batchSize(_ fetchBatchSize: Int) -> FetchRequest {
+        fetchRequest.fetchBatchSize = fetchBatchSize
+        return self
+    }
+    
+    // MARK: FETCH LIMIT CLAUSE
+    
+    @discardableResult
+    public func limit(_ fetchLimit: Int) -> FetchRequest {
+        fetchRequest.fetchLimit = fetchLimit
+        return self
+    }
+    
+    // MARK: CUSTOMISE CLAUSE
+    
+    @discardableResult
+    public func customise(_ completion: (RequestType) -> Void) -> FetchRequest {
+        completion(fetchRequest)
+        return self
+    }
+    
+    // MARK: ORDER BY CLAUSE
+    
     @discardableResult
     public func orderBy<Value>(_ sortKeys: OrderBy<T, Value>...) -> FetchRequest {
         fetchRequest.sortDescriptors = sortKeys.map { $0.descriptor }
@@ -30,6 +56,8 @@ public final class FetchRequest<T: NSManagedObject> {
         fetchRequest.sortDescriptors = sortDescriptors.map { $0 }
         return self
     }
+    
+    // MARK: WHERE CLAUSE
     
     @discardableResult
     public func `where`(_ format: String, args: CVarArg...) -> FetchRequest {
@@ -64,11 +92,7 @@ public final class FetchRequest<T: NSManagedObject> {
         return self
     }
     
-    @discardableResult
-    public func limit(_ fetchLimit: Int) -> FetchRequest {
-        fetchRequest.fetchLimit = fetchLimit
-        return self
-    }
+    // MARK: FETCH PROPERTIES CLAUSE
     
     @discardableResult
     public func properties(_ propertiesToFetch: [Any]) -> FetchRequest {
@@ -82,6 +106,8 @@ public final class FetchRequest<T: NSManagedObject> {
         fetchRequest.propertiesToFetch = propertiesToFetch
         return self
     }
+    
+    // MARK: GROUP BY CLAUSE
     
     @discardableResult
     public func groupBy(_ propertiesToGroupBy: [Any]) -> FetchRequest {
@@ -105,9 +131,38 @@ public final class FetchRequest<T: NSManagedObject> {
         return self
     }
     
+    // MARK: HAVING CLAUSE
+    
     @discardableResult
-    public func batchSize(_ fetchBatchSize: Int) -> FetchRequest {
-        fetchRequest.fetchBatchSize = fetchBatchSize
+    public func having(_ format: String, args: CVarArg...) -> FetchRequest {
+        let predicate = NSPredicate(format: format, args)
+        fetchRequest.havingPredicate = predicate
+        return self
+    }
+
+    @discardableResult
+    public func having(_ value: Bool) -> FetchRequest {
+        let predicate = NSPredicate(value: value)
+        fetchRequest.havingPredicate = predicate
+        return self
+    }
+
+    @discardableResult
+    public func having(_ format: String, argumentArray: [Any]?) -> FetchRequest {
+        let predicate = NSPredicate(format: format, argumentArray: argumentArray)
+        fetchRequest.havingPredicate = predicate
+        return self
+    }
+
+    @discardableResult
+    public func having(_ predicate: NSPredicate) -> FetchRequest {
+        fetchRequest.havingPredicate = predicate
+        return self
+    }
+
+    @discardableResult
+    public func having(_ clause: Where<T>) -> FetchRequest {
+        fetchRequest.havingPredicate = clause.predicate
         return self
     }
 }
