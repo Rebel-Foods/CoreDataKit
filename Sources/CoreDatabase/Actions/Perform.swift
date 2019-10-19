@@ -42,6 +42,12 @@ public final class Perform<T: NSManagedObject> {
         try context.save()
     }
     
+    public func batchDelete() throws {
+        let fetchRequest = request.fetchRequest
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        try context.execute(batchDeleteRequest)
+    }
+    
     private func delete(_ object: T, inContext objectContext: NSManagedObjectContext? = nil) throws {
         let context = objectContext ?? object.managedObjectContext
         context?.delete(object)
