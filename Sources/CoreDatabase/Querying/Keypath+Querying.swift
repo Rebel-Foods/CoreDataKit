@@ -11,15 +11,13 @@ import CoreData
 public func == <T: NSManagedObject, Value: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<T, Value>, _ value: Value) -> Where<T> {
     
     let path = keyPath._kvcKeyPathString!
-    let predicate = NSPredicate(format: "\(path) == \(value.cs_toQueryableNativeType())")
-    return Where<T>(predicate)
+    return Where<T>(path, isEqualTo: value)
 }
 
 public func != <T: NSManagedObject, Value: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<T, Value>, _ value: Value) -> Where<T> {
     
     let path = keyPath._kvcKeyPathString!
-    let predicate = NSPredicate(format: "\(path) != \(value.cs_toQueryableNativeType())")
-    return Where<T>(predicate)
+    return !Where<T>(path, isEqualTo: value)
 }
 
 public func < <T: NSManagedObject, Value: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Value>, _ value: Value) -> Where<T> {
@@ -53,34 +51,15 @@ public func >= <T: NSManagedObject, Value: QueryableAttributeType & Comparable>(
 // MARK: Optionals
 
 public func == <T: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<T, Optional<V>>, _ value: V?) -> Where<T> {
-    let path = keyPath._kvcKeyPathString!
     
-    switch value {
-        
-    case nil, is NSNull:
-        let predicate = NSPredicate(format: "\(path) == nil")
-        return Where<T>(predicate)
-        
-    case let value?:
-        let predicate = NSPredicate(format: "\(path) == \(value.cs_toQueryableNativeType())")
-        return Where<T>(predicate)
-    }
+    let path = keyPath._kvcKeyPathString!
+    return Where<T>(path, isEqualTo: value)
 }
 
 public func != <T: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<T, Optional<V>>, _ value: V?) -> Where<T> {
     
     let path = keyPath._kvcKeyPathString!
-    
-    switch value {
-        
-    case nil, is NSNull:
-        let predicate = NSPredicate(format: "\(path) != nil")
-        return Where<T>(predicate)
-        
-    case let value?:
-        let predicate = NSPredicate(format: "\(path) != \(value.cs_toQueryableNativeType())")
-        return Where<T>(predicate)
-    }
+    return !Where<T>(path, isEqualTo: value)
 }
 
 public func < <T: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<T, Optional<V>>, _ value: V?) -> Where<T> {

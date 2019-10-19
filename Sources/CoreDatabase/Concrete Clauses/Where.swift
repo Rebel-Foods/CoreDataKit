@@ -29,6 +29,23 @@ public struct Where<T: NSManagedObject> {
     }
     
     /**
+     Initializes a `Where` clause that compares equality
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    public init<U: QueryableAttributeType>(_ keyPath: String, isEqualTo value: U?) {
+        switch value {
+            
+        case nil, is NSNull:
+            self.init(NSPredicate(format: "\(keyPath) == nil"))
+            
+        case let value?:
+            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [value.cs_toQueryableNativeType()]))
+        }
+    }
+    
+    /**
      Initializes a `Where` clause with a predicate using the specified string format and arguments
      
      - parameter format: the format string for the predicate
