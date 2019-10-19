@@ -8,7 +8,7 @@
 
 import CoreData
 
-// MARK: - Magic
+// MARK: CoreDataStack
 internal final class CoreDataStack {
     static let shared = CoreDataStack()
     

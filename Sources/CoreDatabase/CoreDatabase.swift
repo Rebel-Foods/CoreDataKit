@@ -32,4 +32,8 @@ public final class CoreDatabase {
     public class func performBatchInsertions<T: NSManagedObject>(_ insertions: BatchInserts, in: T.Type) throws {
         _ = try Insert<T>(insertions)
     }
+    
+    public class func performBatchUpdates<T: NSManagedObject>(_ builder: (BatchUpdateRequest<T>) -> Void) throws {
+        _ = try BatchUpdate<T>(builder)
+    }
 }
