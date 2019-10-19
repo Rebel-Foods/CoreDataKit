@@ -11,11 +11,9 @@ import CoreData
 internal final class BatchUpdate<T: NSManagedObject> {
     
     init(_ builder: (BatchUpdateRequest<T>) -> Void) throws {
-        let context = CoreDataStack.shared.newBackgroundTask()
-        
-        let request = BatchUpdateRequest<T>(in: context)
+        let request = BatchUpdateRequest<T>()
         builder(request)
         
-        try context.execute(request.batchUpdateRequest)
+        try request.context.execute(request.batchUpdateRequest)
     }
 }
