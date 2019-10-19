@@ -16,7 +16,6 @@ public final class FetchRequest<T: NSManagedObject> {
     
     public init() {
         fetchRequest = T.self.fetchRequest()
-        fetchRequest.returnsObjectsAsFaults = false
     }
     
     // MARK: FETCH BATCH SIZE CLAUSE

@@ -12,13 +12,15 @@ public final class Perform<T: NSManagedObject> {
     public typealias DictionaryResult = [[String : Any]]
     
     private let request: FetchRequest<T>
-    private lazy var context = CoreDataStack.shared.newBackgroundTask()
+    private let context: NSManagedObjectContext
     
     init(builder: () -> FetchRequest<T>) {
+        context = CoreDataStack.shared.newBackgroundTask()
         request = builder()
     }
     
     internal init() {
+        context = CoreDataStack.shared.newBackgroundTask()
         request = FetchRequest<T>()
     }
     
