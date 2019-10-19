@@ -9,9 +9,9 @@
 import CoreData
 
 public typealias BatchUpdates = [AnyHashable : Any]
+public typealias KeyPathBatchUpdates<T: NSManagedObject> = [PartialKeyPath<T>: Any]
 
 public final class BatchUpdateRequest<T: NSManagedObject> {
-    public typealias Updates = [PartialKeyPath<T>: Any]
     
     internal let batchUpdateRequest: NSBatchUpdateRequest
     internal let context = CoreDataStack.shared.newBackgroundTask()
@@ -22,7 +22,7 @@ public final class BatchUpdateRequest<T: NSManagedObject> {
     }
     
     @discardableResult
-    public func propertiesToUpdate(_ propertiesToUpdate: Updates?) -> BatchUpdateRequest {
+    public func propertiesToUpdate(_ propertiesToUpdate: KeyPathBatchUpdates<T>?) -> BatchUpdateRequest {
         if let propertiesToUpdate = propertiesToUpdate {
             let updates = Dictionary(uniqueKeysWithValues: propertiesToUpdate.map { ($0._kvcKeyPathString!, $1) })
             batchUpdateRequest.propertiesToUpdate = updates
