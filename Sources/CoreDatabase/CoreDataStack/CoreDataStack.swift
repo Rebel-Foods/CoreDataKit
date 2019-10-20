@@ -46,8 +46,8 @@ internal final class CoreDataStack {
         return container
     }()
     
-    /// <#Description#>
-    /// - Parameter block: <#block description#>
+    /// Causes the persistent container to execute the block against a new private queue context.
+    /// - Parameter block: A block that is executed by the persistent container against a newly created private context. The private context is passed into the block as part of the execution of the block.
     func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
         persistentContainer.performBackgroundTask { (context) in
             context.automaticallyMergesChangesFromParent = true
@@ -55,8 +55,8 @@ internal final class CoreDataStack {
         }
     }
     
-    /// <#Description#>
-    /// - Returns:
+    /// Creates a private managed object context.
+    /// - Returns: A newly created private managed object context.
     func newBackgroundTask() -> NSManagedObjectContext {
         let context = persistentContainer.newBackgroundContext()
         context.automaticallyMergesChangesFromParent = true

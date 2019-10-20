@@ -14,6 +14,8 @@ public final class Perform<T: NSManagedObject> {
     private let request: FetchRequest<T>
     private let context: NSManagedObjectContext
     
+    /// Intitalizes Fetch Request to perform actions.
+    /// - Parameter builder: Block which returns the Fetch Request.
     init(builder: () -> FetchRequest<T>) {
         context = CoreDataStack.shared.newBackgroundTask()
         request = builder()
@@ -24,6 +26,8 @@ public final class Perform<T: NSManagedObject> {
         request = FetchRequest<T>()
     }
     
+    /// Attempts to fetch objects from a persistent store and saves the updates on a `private queue`.
+    /// - Parameter completion: Block to update array of objects.
     public func update(_ completion: ([T]) -> Void) throws -> [T] {
         let objects: [T] = try _fetch(context: context)
         completion(objects)
@@ -31,6 +35,7 @@ public final class Perform<T: NSManagedObject> {
         return objects
     }
     
+    /// Attempts to do delete data with given fetch request in a persistent store by loading data into memory and deleteing it.
     public func delete() throws {
         let fetchRequest = request.fetchRequest
         
@@ -42,6 +47,7 @@ public final class Perform<T: NSManagedObject> {
         try context.save()
     }
     
+    /// Attempts to do a batch delete of data with given fetch request in a persistent store without loading any data into memory.
     public func batchDelete() throws {
         let fetchRequest = request.fetchRequest
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -54,11 +60,15 @@ public final class Perform<T: NSManagedObject> {
         try context?.save()
     }
     
+    /// Attempts to fetch objects from a persistent store with given fetch request on `main queue`.
+    /// - Returns: Array of objects.
     public func fetch() throws -> [T] {
         let context = CoreDataStack.shared.viewContext
         return try _fetch(context: context)
     }
     
+    /// Attempts to fetch objects from a persistent store with given fetch request on `main queue`.
+    /// - Returns: Array of `Dictionary<String, Any>`.
     public func fetchDictionary() throws -> DictionaryResult {
         let context = CoreDataStack.shared.viewContext
         return try _fetch(context: context)

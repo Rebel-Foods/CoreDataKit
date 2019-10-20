@@ -8,7 +8,8 @@
 
 import CoreData
 
-public enum OrderBy<T: NSManagedObject, Value> {
+public enum OrderBy<T: NSManagedObject, Value>: Hashable, Equatable {
+    
     case ascending(KeyPath<T, Value>)
     case descending(KeyPath<T, Value>)
     
