@@ -82,6 +82,9 @@ public protocol QueryableAttributeType: Hashable {
      */
     @inline(__always)
     func cs_toQueryableNativeType() -> QueryableNativeType
+    
+    @inline(__always)
+    func cs_toData() -> Data?
 }
 
 // MARK: - Bool
@@ -112,6 +115,11 @@ extension Bool: QueryableAttributeType {
         
         return self as QueryableNativeType
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: cs_toQueryableNativeType())
+    }
 }
 
 
@@ -133,6 +141,11 @@ extension CGFloat: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self as QueryableNativeType
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: cs_toQueryableNativeType())
     }
 }
 
@@ -156,6 +169,11 @@ extension Data: QueryableAttributeType {
         
         return self as QueryableNativeType
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        self
+    }
 }
 
 
@@ -177,6 +195,11 @@ extension Date: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self as NSDate
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        timeIntervalSince1970.cs_toData()
     }
 }
 
@@ -200,6 +223,11 @@ extension Double: QueryableAttributeType {
         
         return self as NSNumber
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: cs_toQueryableNativeType())
+    }
 }
 
 
@@ -221,6 +249,11 @@ extension Float: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self as NSNumber
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: cs_toQueryableNativeType())
     }
 }
 
@@ -244,6 +277,11 @@ extension Int: QueryableAttributeType {
         
         return self as NSNumber
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: cs_toQueryableNativeType())
+    }
 }
 
 
@@ -265,6 +303,11 @@ extension Int8: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self as NSNumber
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: cs_toQueryableNativeType())
     }
 }
 
@@ -288,6 +331,11 @@ extension Int16: QueryableAttributeType {
         
         return self as NSNumber
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: cs_toQueryableNativeType())
+    }
 }
 
 
@@ -310,6 +358,11 @@ extension Int32: QueryableAttributeType {
         
         return self as NSNumber
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: cs_toQueryableNativeType())
+    }
 }
 
 
@@ -331,6 +384,11 @@ extension Int64: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self as NSNumber
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: cs_toQueryableNativeType())
     }
 }
 
@@ -362,6 +420,11 @@ extension NSData: QueryableAttributeType {
         
         return self
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: self)
+    }
 }
 
 
@@ -391,6 +454,11 @@ extension NSDate: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        timeIntervalSince1970.cs_toData()
     }
 }
 
@@ -433,6 +501,11 @@ extension NSManagedObjectID: QueryableAttributeType {
         
         return self
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        nil
+    }
 }
 
 
@@ -462,6 +535,11 @@ extension NSNull: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        nil
     }
 }
 
@@ -493,6 +571,11 @@ extension NSNumber: QueryableAttributeType {
         
         return self
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        NSKeyedArchiver.archivedData(withRootObject: self)
+    }
 }
 
 
@@ -523,6 +606,11 @@ extension NSString: QueryableAttributeType {
         
         return self
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        self.data(using: String.Encoding.utf8.rawValue)
+    }
 }
 
 
@@ -548,6 +636,11 @@ extension NSURL: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return (self as URL).absoluteString as QueryableNativeType
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        absoluteString?.data(using: .utf8)
     }
 }
 
@@ -575,6 +668,11 @@ extension NSUUID: QueryableAttributeType {
         
         return self.uuidString.lowercased() as QueryableNativeType
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        uuidString.data(using: .utf8)
+    }
 }
 
 
@@ -596,6 +694,11 @@ extension String: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self as QueryableNativeType
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        data(using: .utf8)
     }
 }
 
@@ -619,6 +722,11 @@ extension URL: QueryableAttributeType {
         
         return self.absoluteString as QueryableNativeType
     }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        absoluteString.data(using: .utf8)
+    }
 }
 
 
@@ -640,6 +748,11 @@ extension UUID: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self.uuidString.lowercased() as QueryableNativeType
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        uuidString.data(using: .utf8)
     }
 }
 
@@ -665,5 +778,10 @@ extension RawRepresentable where RawValue: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self.rawValue.cs_toQueryableNativeType()
+    }
+    
+    @inline(__always)
+    public func cs_toData() -> Data? {
+        rawValue.cs_toData()
     }
 }
