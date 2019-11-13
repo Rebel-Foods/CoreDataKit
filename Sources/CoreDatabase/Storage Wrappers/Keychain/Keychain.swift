@@ -37,20 +37,7 @@ open class Keychain {
     private var accessGroup: String?
     
     public init(accessGroup: String? = nil) {
-        var identifier = Bundle.main.bundleIdentifier
-        
-        if let id = identifier {
-            identifier = id
-        }
-        
-        var otherIdentifier = ""
-        #if DEBUG
-        otherIdentifier = "Debug Keychain"
-        #else
-        otherIdentifier = "Keychain"
-        #endif
-        
-        self.serviceName = identifier ?? otherIdentifier
+        self.serviceName = Bundle.main.bundleIdentifier!
         self.accessGroup = accessGroup
     }
     
