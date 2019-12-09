@@ -33,12 +33,24 @@ public typealias CKBatchUpdates = [AnyHashable : Any]
 
 public typealias CKKeyPathBatchUpdates<Object: CKObject> = [PartialKeyPath<Object>: Any]
 
-
 public typealias CKBatchUpdateRequest = NSBatchUpdateRequest
 
 public typealias CKBatchUpdateResultType = NSBatchUpdateRequestResultType
 
 public typealias CKBatchUpdateResult = NSBatchUpdateResult
+
+
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+public typealias CKBatchInserts = [[String : Any]]
+
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+public typealias CKBatchInsertRequest = NSBatchInsertRequest
+
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+public typealias CKBatchInsertResultType = NSBatchInsertRequestResultType
+
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+public typealias CKBatchInsertResult = NSBatchInsertResult
 
 
 public typealias CKPredicate = NSPredicate

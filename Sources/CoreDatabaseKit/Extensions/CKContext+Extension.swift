@@ -166,8 +166,8 @@ extension CKContext {
             }
         }
         
-        if let deleteResult = result {
-            return deleteResult
+        if let updateResult = result {
+            return updateResult
         } else if let fetchError = error {
             throw fetchError
         } else {
@@ -223,6 +223,35 @@ extension CKContext {
         
         if let deleteResult = result {
             return deleteResult
+        } else if let fetchError = error {
+            throw fetchError
+        } else {
+            throw NSError(domain: CKError.errorDomain, code: 101, userInfo: nil)
+        }
+    }
+}
+
+extension CKContext {
+
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    func batchInsert<Object: CKObject>(_ request: CKBatchInsert<Object>, resultType: CKBatchInsertResultType) throws -> CKBatchInsertResult {
+        let batchInsertRequest = request.batchInsertRequest
+        batchInsertRequest.resultType = resultType
+        
+        var result: CKBatchInsertResult?
+        var error: NSError?
+        
+        performAndWait {
+            do {
+                result = try execute(batchInsertRequest) as? CKBatchInsertResult
+                
+            } catch let fetchError as NSError {
+                error = fetchError
+            }
+        }
+        
+        if let insertResult = result {
+            return insertResult
         } else if let fetchError = error {
             throw fetchError
         } else {

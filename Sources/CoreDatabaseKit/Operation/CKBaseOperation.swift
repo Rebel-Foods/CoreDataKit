@@ -6,7 +6,7 @@
 //  Copyright © 2019 Raghav Ahuja. All rights reserved.
 //
 
-import Foundation
+import CoreData
 
 public class /*abstract*/ CKBaseOperation {
     
@@ -52,6 +52,43 @@ public extension CKBaseOperation {
         context.insert(object)
         return object
     }
+    
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    func batchInsert<Object: CKObject>(into object: CKBatchInsert<Object>) throws {
+        let _: Bool? = try batchInsert(into: object)
+    }
+    
+    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    func batchInsert<Object: CKObject, ResultType: CKResult>(into object: CKBatchInsert<Object>) throws -> ResultType? {
+        precondition("Attempted to batch insert an entity of type '\(String(reflecting: Object.self))'")
+        
+        let result = try context.batchInsert(object, resultType: ResultType.ckResultType.batchInsert)
+        return result.result as? ResultType
+    }
+
+//    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+//    func batchInsert<Object: CKObject>(into object: CKBatchInsert<Object>) throws -> Bool {
+//        precondition("Attempted to batch insert an entity of type '\(String(reflecting: Object.self))'")
+//        
+//        let result = try context.batchInsert(object, resultType: .statusOnly)
+//        return result.result as? Bool ?? false
+//    }
+//
+//    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+//    func batchInsert<Object: CKObject>(into object: CKBatchInsert<Object>) throws -> [CKObjectId] {
+//        precondition("Attempted to batch insert an entity of type '\(String(reflecting: Object.self))'")
+//        
+//        let result = try context.batchInsert(object, resultType: .objectIDs)
+//        return result.result as? [CKObjectId] ?? []
+//    }
+//
+//    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+//    func batchInsert<Object: CKObject>(into object: CKBatchInsert<Object>) throws -> Int {
+//        precondition("Attempted to batch insert an entity of type '\(String(reflecting: Object.self))'")
+//        
+//        let result = try context.batchInsert(object, resultType: .count)
+//        return result.result as? Int ?? 0
+//    }
 }
 
 // MARK: UPDATE METHODS
@@ -70,32 +107,37 @@ public extension CKBaseOperation {
         return context.fetchExisting(object)
     }
     
-    func batchUpdate<Object: CKObject>(_ request: CKBatchUpdate<Object>, resultType: CKBatchUpdateResultType) throws -> Any? {
-        precondition("Attempted to batch update an entity of type \(String(reflecting: Object.self))")
-        let result = try context.batchUpdate(request, resultType: resultType)
-        return result.result
+    func batchUpdate<Object: CKObject>(into object: CKBatchUpdate<Object>) throws {
+        let _: Bool? = try batchUpdate(into: object)
     }
     
-    func batchUpdate<Object: CKObject>(_ request: CKBatchUpdate<Object>) throws -> Bool {
+    func batchUpdate<Object: CKObject, Result: CKResult>(into object: CKBatchUpdate<Object>) throws -> Result? {
         precondition("Attempted to batch update an entity of type \(String(reflecting: Object.self))")
         
-        let result = try context.batchUpdate(request, resultType: .statusOnlyResultType)
-        return result.result as? Bool ?? false
+        let result = try context.batchUpdate(object, resultType: Result.ckResultType.batchUpdate)
+        return result.result as? Result
     }
     
-    func batchUpdate<Object: CKObject>(_ request: CKBatchUpdate<Object>) throws -> [CKObjectId] {
-        precondition("Attempted to batch update an entity of type \(String(reflecting: Object.self))")
-        
-        let result = try context.batchUpdate(request, resultType: .updatedObjectIDsResultType)
-        return result.result as? [CKObjectId] ?? []
-    }
-    
-    func batchUpdate<Object: CKObject>(_ request: CKBatchUpdate<Object>) throws -> Int {
-        precondition("Attempted to batch update an entity of type \(String(reflecting: Object.self))")
-        
-        let result = try context.batchUpdate(request, resultType: .updatedObjectsCountResultType)
-        return result.result as? Int ?? NSNotFound
-    }
+//    func batchUpdate<Object: CKObject>(_ request: CKBatchUpdate<Object>) throws -> Bool {
+//        precondition("Attempted to batch update an entity of type \(String(reflecting: Object.self))")
+//
+//        let result = try context.batchUpdate(request, resultType: .statusOnlyResultType)
+//        return result.result as? Bool ?? false
+//    }
+//
+//    func batchUpdate<Object: CKObject>(_ request: CKBatchUpdate<Object>) throws -> [CKObjectId] {
+//        precondition("Attempted to batch update an entity of type \(String(reflecting: Object.self))")
+//
+//        let result = try context.batchUpdate(request, resultType: .updatedObjectIDsResultType)
+//        return result.result as? [CKObjectId] ?? []
+//    }
+//
+//    func batchUpdate<Object: CKObject>(_ request: CKBatchUpdate<Object>) throws -> Int {
+//        precondition("Attempted to batch update an entity of type \(String(reflecting: Object.self))")
+//
+//        let result = try context.batchUpdate(request, resultType: .updatedObjectsCountResultType)
+//        return result.result as? Int ?? NSNotFound
+//    }
 }
 
 // MARK: DELETE METHODS
