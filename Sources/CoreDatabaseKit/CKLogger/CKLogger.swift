@@ -8,12 +8,13 @@
 
 import Foundation
 
-class CKLogger {
+final class CKLogger {
     
+    var isEnabled: Bool
     /**
      Creates a `CKLogger`.
      */
-    public init() { }
+    init(isEnabled e: Bool) { isEnabled = e }
     
     /**
      Handles errors sent by the `CoreDatabaseKit`.
@@ -23,9 +24,11 @@ class CKLogger {
      - parameter line: Source line number.
      - parameter function: Source function name.
      */
-    public func log(error: CKError, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
+    func log(error: CKError, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
         
         #if DEBUG
+        guard isEnabled else { return }
+        
         Swift.print("⚠️ [CoreDatabaseKit: Error] \((String(describing: file) as NSString).lastPathComponent):\(line) \(function)\n  ↪︎ \(error)\n")
         #endif
     }
@@ -39,9 +42,10 @@ class CKLogger {
      - parameter line: Source line number.
      - parameter function: Source function name.
      */
-    public func assert(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
+    func assert(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
         
         #if DEBUG
+        guard isEnabled else { return }
         
         let condition = condition()
         
@@ -63,7 +67,7 @@ class CKLogger {
      - parameter line: Source line number.
      - parameter function: Source function name.
      */
-    public func precondition(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
+    func precondition(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
         
         let condition = condition()
         
@@ -84,7 +88,7 @@ class CKLogger {
      - parameter line: Source line number.
      - parameter function: Source function name.
      */
-    public func fatalError(_ message: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) -> Never {
+    func fatalError(_ message: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) -> Never {
         
         let message = message()
         Swift.print("❗ [CoreDatabaseKit: Fatal Error] \((String(describing: file) as NSString).lastPathComponent):\(line) \(function)\n  ↪︎ \(message)\n")

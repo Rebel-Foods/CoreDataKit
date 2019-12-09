@@ -22,6 +22,15 @@ public class /*abstract*/ CKBaseOperation {
     
     var isRunningInAllowedQueue: Bool { queue.isCurrentExecutionContext() }
     
+    /// The merge policy of the operation.
+    /// A policy that you use to resolve conflicts between the persistent store and in-memory versions of managed objects.
+    /// The default is `.errorMergePolicyType`.
+    public var mergePolicy: CKMergePolicyType = .errorMergePolicyType {
+        willSet {
+            context.mergePolicy = CKMergePolicy(merge: newValue)
+        }
+    }
+    
     private let runningCondition = " outside its designated queue."
     private lazy var committedCondition = " from an already committed \(String(reflecting: Self.self))."
     
@@ -206,8 +215,8 @@ extension CKBaseOperation: FetchClause {
 private extension CKBaseOperation {
     
     func precondition(_ message: String, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
-        logger.precondition(isRunningInAllowedQueue, message + runningCondition, file: file, line: line, function: function)
+        logger.assert(isRunningInAllowedQueue, message + runningCondition, file: file, line: line, function: function)
         
-        logger.precondition(!isCommitted, message + committedCondition, file: file, line: line, function: function)
+        logger.assert(!isCommitted, message + committedCondition, file: file, line: line, function: function)
     }
 }

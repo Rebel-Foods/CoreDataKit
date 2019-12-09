@@ -14,14 +14,23 @@ public final class CoreDatabaseKit {
     
     public let stack: CoreDataStack
     
+    public var enableLogging: Bool {
+        get {
+            logger.isEnabled
+        } set {
+            logger.isEnabled = newValue
+        }
+    }
+    
     private let queue: DispatchQueue
     
-    let logger = CKLogger()
+    let logger: CKLogger
     
     public init(databaseName: String) {
         stack = CoreDataStack(databaseName: databaseName)
-        queue = DispatchQueue(label: "com.CoreDatabase.transactionQueue", qos: .default,
+        queue = DispatchQueue(label: "com.CoreDatabaseKit.contextQueue", qos: .default,
                               attributes: [], autoreleaseFrequency: .inherit, target: nil)
+        logger = CKLogger(isEnabled: true)
     }
     
     public convenience init() {
