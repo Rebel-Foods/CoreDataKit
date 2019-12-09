@@ -1,7 +1,7 @@
 import XCTest
 
-import CoreDatabaseTests
+import CoreDatabaseKitTests
 
 var tests = [XCTestCaseEntry]()
-tests += CoreDatabaseTests.allTests()
+tests += CoreDatabaseKitTests.allTests()
 XCTMain(tests)
