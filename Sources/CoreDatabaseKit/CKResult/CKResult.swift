@@ -1,8 +1,9 @@
 //
-//  File.swift
-//  
+//  CKResult.swift
+//  CoreDatabaseKit
 //
-//  Created by Raghav Ahuja on 09/12/19.
+//  Created by Raghav Ahuja on 18/10/19.
+//  Copyright © 2019 Raghav Ahuja. All rights reserved.
 //
 
 import Foundation
@@ -33,10 +34,11 @@ extension Array: CKResult where Element: CKObjectId {
     }
 }
 
+/// Batch Request result type.
 public enum CKResultType {
-    case statusOnly
-    case objectIDs
-    case count
+    case statusOnly  // Return a status boolean. Bool.
+    case objectIDs // Return the object IDs of the rows that were inserted / updated. [CKObjectId].
+    case count // Return the number of rows that were inserted / updated.
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
     var batchInsert: CKBatchInsertResultType {
@@ -52,6 +54,14 @@ public enum CKResultType {
             case .statusOnly: return .statusOnlyResultType
             case .objectIDs: return .updatedObjectIDsResultType
             case .count: return .updatedObjectsCountResultType
+        }
+    }
+    
+    var batchDelete: CKBatchDeleteResultType {
+        switch self {
+        case .statusOnly: return .resultTypeStatusOnly
+        case .objectIDs: return .resultTypeObjectIDs
+        case .count: return .resultTypeCount
         }
     }
 }

@@ -234,8 +234,8 @@ extension CKContext {
 extension CKContext {
 
     @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-    func batchInsert<Object: CKObject>(_ request: CKBatchInsert<Object>, resultType: CKBatchInsertResultType) throws -> CKBatchInsertResult {
-        let batchInsertRequest = request.batchInsertRequest
+    func batchInsert<Object: CKObject>(_ object: CKBatchInsert<Object>, resultType: CKBatchInsertResultType) throws -> CKBatchInsertResult {
+        let batchInsertRequest = object.batchInsertRequest
         batchInsertRequest.resultType = resultType
         
         var result: CKBatchInsertResult?
