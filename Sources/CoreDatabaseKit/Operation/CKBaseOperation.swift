@@ -205,7 +205,7 @@ public extension CKBaseOperation {
     /// - Parameters:
     ///   - request: <#request description#>
     ///   - resultType: <#resultType description#>
-    func batchDelete<Object>(_ request: CKFetch<Object>, resultType: CKBatchDeleteResultType) throws {
+    func batchDelete<Object>(_ request: CKFetch<Object>) throws {
         precondition("Attempted to delete from entity of type '\(String(reflecting: Object.self))'")
         
         _ = try context.batchDelete(request, resultType: .resultTypeStatusOnly)
@@ -215,7 +215,7 @@ public extension CKBaseOperation {
     /// - Parameters:
     ///   - request: <#request description#>
     ///   - resultType: <#resultType description#>
-    func batchDelete<Object, Result: CKResult>(_ request: CKFetch<Object>, resultType: CKBatchDeleteResultType) throws -> Result? {
+    func batchDelete<Object, Result: CKResult>(_ request: CKFetch<Object>) throws -> Result? {
         precondition("Attempted to delete from entity of type '\(String(reflecting: Object.self))'")
         
         let result = try context.batchDelete(request, resultType: Result.ckResultType.batchDelete)
