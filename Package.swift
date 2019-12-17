@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "CoreDatabase",
+    name: "CoreDataKit",
     platforms: [
         .macOS(.v10_12),
         .iOS(.v10),
@@ -14,8 +14,9 @@ let package = Package(
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
-            name: "CoreDatabase",
-            targets: ["CoreDatabase"]),
+            name: "CoreDataKit",
+            type: .static,
+            targets: ["CoreDataKit", "FRC"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -24,11 +25,12 @@ let package = Package(
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
+        .target(name: "FRC"),
         .target(
-            name: "CoreDatabase",
+            name: "CoreDataKit",
             dependencies: []),
         .testTarget(
-            name: "CoreDatabaseTests",
-            dependencies: ["CoreDatabase"]),
+            name: "CoreDataKitTests",
+            dependencies: ["CoreDataKit"]),
     ]
 )
