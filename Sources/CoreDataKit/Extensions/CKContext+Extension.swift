@@ -118,7 +118,7 @@ extension CKContext: FetchClause {
         }
     }
     
-    public func count<Object>(_ request: CKFetch<Object>) throws -> Int where Object : CKObject {
+    public func count<Object>(for request: CKFetch<Object>) throws -> Int where Object : CKObject {
         let fetchRequest = request.format(to: NSNumber.self)
         
         var count: Int = 0
@@ -135,7 +135,7 @@ extension CKContext: FetchClause {
         if let fetchError = error {
             throw fetchError
         } else if count == NSNotFound {
-            let error = NSError(domain: NSCocoaErrorDomain, code: NSNotFound, userInfo: nil)
+            let error = NSError(domain: NSCocoaErrorDomain, code: NSNotFound, userInfo: [NSLocalizedDescriptionKey: "Cannot calculate count for the given `CKFetch` request."])
             throw error
         } else {
             return count

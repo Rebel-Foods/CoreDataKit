@@ -10,10 +10,13 @@ import Foundation
 
 public final class CoreDataKit {
     
+    /// The default instance with database name being application's name.
     public static let `default` = CoreDataKit()
     
+    /// Core Data Stack associated with this instance.
     public let stack: CoreDataStack
     
+    /// Allows the `CoreDataKit` to log errors and other information in the debug console.
     public var enableLogging: Bool {
         get {
             logger.isEnabled
@@ -26,6 +29,8 @@ public final class CoreDataKit {
     
     let logger: CKLogger
     
+    /// Intializes an instance of `CoreDataKit` with the given database name.
+    /// - Parameter databaseName: Database name.
     public init(databaseName: String) {
         stack = CoreDataStack(databaseName: databaseName)
         queue = DispatchQueue(label: "com.CoreDataKit.contextQueue", qos: .default,
@@ -41,6 +46,10 @@ public final class CoreDataKit {
 
 public extension CoreDataKit {
     
+    /// <#Description#>
+    /// - Parameter workItem: <#workItem description#>
+    /// - Throws:
+    /// - Returns:
     func perform<T>(synchronous workItem: (CKSynchronousOperation) throws -> T) throws -> T {
         let operation = CKSynchronousOperation(context: stack.newBackgroundTask(), queue: queue, logger: logger)
 
@@ -106,11 +115,15 @@ public extension CoreDataKit {
 extension CoreDataKit: FetchClause {
     
     public func fetch<Object>(_ request: CKFetch<Object>) throws -> [Object] where Object : CKObject {
-        try stack.viewContext.fetch(request)
+        precondition()
+        
+        return try stack.viewContext.fetch(request)
     }
     
     public func fetchFirst<Object>(_ request: CKFetch<Object>) throws -> Object? where Object : CKObject {
-        try stack.viewContext.fetchFirst(request)
+        precondition()
+        
+        return try stack.viewContext.fetchFirst(request)
     }
     
     public func fetchExisting<Object>(_ object: Object) -> Object? where Object : CKObject {
@@ -130,18 +143,38 @@ extension CoreDataKit: FetchClause {
     }
     
     public func fetchIds<Object>(_ request: CKFetch<Object>) throws -> [CKObjectId] where Object : CKObject {
-        try stack.viewContext.fetchIds(request)
+        precondition()
+        
+        return try stack.viewContext.fetchIds(request)
     }
     
     public func query<Object>(_ request: CKFetch<Object>) throws -> [NSDictionary] where Object : CKObject {
-        try stack.viewContext.query(request)
+        precondition()
+        
+        return try stack.viewContext.query(request)
     }
     
-    public func count<Object>(_ request: CKFetch<Object>) throws -> Int where Object : CKObject {
-        try stack.viewContext.count(request)
+    public func count<Object>(for request: CKFetch<Object>) throws -> Int where Object : CKObject {
+        precondition()
+        
+        return try stack.viewContext.count(for: request)
     }
     
     public var unsafeContext: CKContext {
         stack.viewContext
+    }
+}
+
+// MARK: LOGGING
+private extension CoreDataKit {
+    
+    func precondition(file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
+        logger.assert(
+            Thread.isMainThread,
+            "Attempted to fetch from a \(logger.typeName(self)) outside the main thread.",
+            file: file,
+            line: line,
+            function: function
+        )
     }
 }

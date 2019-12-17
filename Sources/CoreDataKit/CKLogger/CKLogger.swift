@@ -11,6 +11,14 @@ import Foundation
 final class CKLogger {
     
     var isEnabled: Bool
+    
+    func typeName<T>(_ value: T) -> String {
+        String(reflecting: type(of: value))
+    }
+    
+    func typeName<T>(_ value: T.Type) -> String {
+        String(reflecting: value)
+    }
     /**
      Creates a `CKLogger`.
      */
