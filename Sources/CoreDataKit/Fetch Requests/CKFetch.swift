@@ -217,7 +217,6 @@ extension CKFetch {
     /// - Parameter propertiesToGroupBy: An array of objects that indicates how data should be grouped before a select statement is run in a SQL database.
     public func groupBy(_ propertiesToGroupBy: [Any]) -> Self {
         fetchRequest.propertiesToGroupBy = propertiesToGroupBy
-        fetchRequest.resultType = .dictionaryResultType
         return self
     }
     
@@ -232,7 +231,6 @@ extension CKFetch {
     /// - Parameter propertiesToGroupBy: An array of objects that indicates how data should be grouped before a select statement is run in a SQL database.
     public func groupBy(_ propertiesToGroupBy: Any...) -> Self {
         fetchRequest.propertiesToGroupBy = propertiesToGroupBy
-        fetchRequest.resultType = .dictionaryResultType
         return self
     }
     
@@ -249,7 +247,6 @@ extension CKFetch {
     public func groupBy<Value>(_ groupBy: KeyPath<Object, Value>, _ propertiesToGroupBy: PartialKeyPath<Object>...) -> Self {
         let propertiesToGroupBy = ([groupBy] + propertiesToGroupBy).compactMap { $0.objcStringValue }
         fetchRequest.propertiesToGroupBy = propertiesToGroupBy
-        fetchRequest.resultType = .dictionaryResultType
         return self
     }
     
@@ -266,7 +263,6 @@ extension CKFetch {
     public func groupBy(_ propertiesToGroupBy: [PartialKeyPath<Object>]) -> Self {
         let propertiesToGroupBy = propertiesToGroupBy.compactMap { $0.objcStringValue }
         fetchRequest.propertiesToGroupBy = propertiesToGroupBy
-        fetchRequest.resultType = .dictionaryResultType
         return self
     }
 }
@@ -351,6 +347,6 @@ extension CKFetch {
             break
         }
         
-        return fetchRequest as! CKFetchRequest<Result>
+        return unsafeBitCast(fetchRequest, to: CKFetchRequest<Result>.self)
     }
 }

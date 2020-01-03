@@ -11,14 +11,14 @@ import Foundation
 extension CKContext: FetchClause {
     
     public func fetch<Object>(_ request: CKFetch<Object>) throws -> [Object] where Object : CKObject {
-        let fetchRequest = request.fetchRequest//format(to: Object.self)
+        let fetchRequest = request.format(to: Object.self)
         
         var objects: [Object] = []
         var error: NSError?
         
         performAndWait {
             do {
-                objects = try fetch(fetchRequest) as! [Object]
+                objects = try fetch(fetchRequest)
             } catch let fetchError as NSError {
                 error = fetchError
             }
@@ -181,7 +181,6 @@ extension CKContext {
     func delete<Object>(_ request: CKFetch<Object>) throws where Object : CKObject {
         let fetchRequest = request.format(to: Object.self)
         
-        fetchRequest.resultType = .managedObjectResultType
         fetchRequest.returnsObjectsAsFaults = true
         fetchRequest.includesPropertyValues = false
         
