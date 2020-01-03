@@ -10,7 +10,7 @@ import Foundation
 
 public final class CKFetch<Object: CKObject> {
     
-    public let fetchRequest: CKFetchRequest<CKFetchResult>
+    let fetchRequest: CKFetchRequest<CKFetchResult>
     
     /// Creates a default `NSFetchRequest` of `ManagedObject`.`
     public init() {
@@ -328,7 +328,7 @@ extension CKFetch {
 
 extension CKFetch {
     
-    public func format<Result: CKFetchResult>(to format: Result.Type) -> CKFetchRequest<Result> {
+    func format<Result: CKFetchResult>(to format: Result.Type) -> CKFetchRequest<Result> {
         
         switch format {
         case is NSNumber.Type:
@@ -347,6 +347,6 @@ extension CKFetch {
             break
         }
         
-        return unsafeBitCast(fetchRequest, to: CKFetchRequest<Result>.self)
+        return fetchRequest as! CKFetchRequest<Result>
     }
 }
