@@ -38,8 +38,8 @@ extension CKContext: FetchClause {
     
     public func fetchExisting<Object>(with objectId: CKObjectId) -> Object? where Object : CKObject {
         do {
-            let object = try existingObject(with: objectId)
-            return unsafeDowncast(object, to: Object.self)
+            let object = try existingObject(with: objectId) as! Object
+            return object
         } catch {
             return nil
         }
@@ -57,11 +57,11 @@ extension CKContext: FetchClause {
             }
         }
         do {
-            let existingObject = try self.existingObject(with: object.objectID)
+            let existingObject = try self.existingObject(with: object.objectID) as! Object
             if existingObject === object {
                 return object
             }
-            return Object.classType(of: object).downcast(object: existingObject)
+            return existingObject
         }
         catch {
             return nil
@@ -100,12 +100,12 @@ extension CKContext: FetchClause {
     public func query<Object>(_ request: CKFetch<Object>) throws -> [NSDictionary] where Object : CKObject {
         let fetchRequest = request.format(to: NSDictionary.self)
         
-        var objectIds: [NSDictionary] = []
+        var dictionary: [NSDictionary] = []
         var error: NSError?
         
         performAndWait {
             do {
-                objectIds = try fetch(fetchRequest)
+                dictionary = try fetch(fetchRequest)
             } catch let fetchError as NSError {
                 error = fetchError
             }
@@ -114,7 +114,7 @@ extension CKContext: FetchClause {
         if let fetchError = error {
             throw fetchError
         } else {
-            return objectIds
+            return dictionary
         }
     }
     
