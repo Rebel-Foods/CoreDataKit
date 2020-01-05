@@ -73,7 +73,7 @@ extension CoreDataKit: CKStoreDescriptionMethods {
         stack.replaceStoreDescriptions(with: descriptions)
     }
     
-    public func loadPersistentStores(block: ((CKStoreDescription, NSError) -> Void)?) {
+    public func loadPersistentStores(block: ((CKStoreDescription, NSError) -> Void)? = nil) {
         stack.loadPersistentStores(block: block)
     }
 }
