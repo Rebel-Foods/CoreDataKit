@@ -40,7 +40,7 @@ public enum CKResultType {
     case objectIDs // Return the object IDs of the rows that were inserted / updated. [CKObjectId].
     case count // Return the number of rows that were inserted / updated.
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     var batchInsert: CKBatchInsertResultType {
         switch self {
             case .statusOnly: return .statusOnly

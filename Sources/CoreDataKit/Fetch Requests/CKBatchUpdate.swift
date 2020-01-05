@@ -97,14 +97,14 @@ extension CKBatchUpdate: WhereClause {
     }
     
     /// The predicate of the fetch request.
-    /// - Parameter predicate: The predicate instance constrains the selection of objects the `CKFetchRequest` instance is to fetch.
+    /// - Parameter predicate: The predicate instance constrains the selection of objects the `FetchRequest` instance is to fetch.
     public func `where`(_ predicate: CKPredicate?) -> Self {
         self.predicate = predicate
         return self
     }
     
     /// The predicate of the fetch request.
-    /// - Parameter clause: `Where` clause to create a `CKFetchRequest` with.
+    /// - Parameter clause: `Where` clause to create a `FetchRequest` with.
     public func `where`(_ clause: Where<Object>) -> Self {
         predicate = clause.predicate
         return self

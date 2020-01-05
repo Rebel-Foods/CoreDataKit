@@ -8,6 +8,18 @@
 
 import CoreData
 
+public typealias CKContainer = NSPersistentContainer
+
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+public typealias CKCloudContainer = NSPersistentCloudKitContainer
+
+public typealias CKCloudSchemaInitializationOptions = NSPersistentCloudKitContainerSchemaInitializationOptions
+
+public typealias CKStoreDescription = NSPersistentStoreDescription
+
+public typealias CKObjectModel = NSManagedObjectModel
+
+
 public typealias CKObject = NSManagedObject
 
 public typealias CKObjectId = NSManagedObjectID
@@ -15,7 +27,7 @@ public typealias CKObjectId = NSManagedObjectID
 public typealias CKContext = NSManagedObjectContext
 
 
-public typealias CKFetchRequest<Result: CKFetchResult> = NSFetchRequest<Result>
+public typealias FetchRequest<Result: CKFetchResult> = NSFetchRequest<Result>
 
 public typealias CKFetchRequestResultType = NSFetchRequestResultType
 
@@ -40,16 +52,16 @@ public typealias CKBatchUpdateResultType = NSBatchUpdateRequestResultType
 public typealias CKBatchUpdateResult = NSBatchUpdateResult
 
 
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public typealias CKBatchInserts = [[String : Any]]
 
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public typealias CKBatchInsertRequest = NSBatchInsertRequest
 
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public typealias CKBatchInsertResultType = NSBatchInsertRequestResultType
 
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public typealias CKBatchInsertResult = NSBatchInsertResult
 
 

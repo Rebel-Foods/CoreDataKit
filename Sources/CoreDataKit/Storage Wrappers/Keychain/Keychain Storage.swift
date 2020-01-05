@@ -9,19 +9,24 @@
 import Foundation
 
 @propertyWrapper
-public struct KeychainStorage<Key: StorageKeys, Value: CKQueryable> {
+public struct KeychainStorage<Value: CKQueryable> {
     
-    private let key: Key
+    private let key: String
     private var value: Value
     
-    public init(key k: Key, initialValue v: Value) {
+    public init<Key: StorageKeys>(key k: Key, initialValue v: Value) {
+        key = k.key
+        value = v
+    }
+    
+    public init(key k: String, initialValue v: Value) {
         key = k
         value = v
     }
     
     public var wrappedValue: Value {
         get {
-            guard let data = Keychain.standard.data(for: key.key) else {
+            guard let data = Keychain.standard.data(for: key) else {
                 return value
             }
             
@@ -32,18 +37,18 @@ public struct KeychainStorage<Key: StorageKeys, Value: CKQueryable> {
         set {
             do {
                 let data = try newValue.ckEncode()
-                if Keychain.standard.set(data, for: key.key) {
+                if Keychain.standard.set(data, for: key) {
                     value = newValue
                 } else {
-                    print("Cannot save value for key: \(key.key) in Keychain.")
+                    print("Cannot save value for key: \(key) in Keychain.")
                 }
             } catch {
-                print("Cannot save value for key: \(key.key).\nError: \(error as NSError)")
+                print("Cannot save value for key: \(key).\nError: \(error as NSError)")
             }
         }
     }
     
     public func delete() {
-        Keychain.standard.removeObject(for: key.key)
+        Keychain.standard.removeObject(for: key)
     }
 }

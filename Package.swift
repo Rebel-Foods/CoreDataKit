@@ -9,7 +9,7 @@ let package = Package(
         .macOS(.v10_12),
         .iOS(.v10),
         .tvOS(.v10),
-        .watchOS(.v3)
+        .watchOS(.v4)
     ],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
@@ -19,6 +19,7 @@ let package = Package(
             targets: ["CoreDataKit", "FRC"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/ragzy15/PublisherKit", from: .init(1, 0, 0))
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
@@ -28,7 +29,7 @@ let package = Package(
         .target(name: "FRC"),
         .target(
             name: "CoreDataKit",
-            dependencies: []),
+            dependencies: ["PublisherKit"]),
         .testTarget(
             name: "CoreDataKitTests",
             dependencies: ["CoreDataKit"]),

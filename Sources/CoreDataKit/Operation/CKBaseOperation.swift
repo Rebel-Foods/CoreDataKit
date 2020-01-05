@@ -63,7 +63,7 @@ public extension CKBaseOperation {
     
     /// Batch insert of data in a persistent store without loading any data or object into memory.
     /// - Parameter object: `CKBatchInsert` object containing the batch data to be inserted.
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func batchInsert<Object: CKObject>(into object: CKBatchInsert<Object>) throws {
         let _: Bool? = try batchInsert(into: object)
     }
@@ -71,7 +71,7 @@ public extension CKBaseOperation {
     /// Batch insert of data in a persistent store without loading any data or object into memory.
     /// - Parameter object: `CKBatchInsert` object containing the batch data to be inserted.
     /// - Returns: Type of `CKResult`. It can be `Int` for count, `Bool` for status or an array of `CKObjectId` indicating Ids for deleted objects.
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func batchInsert<Object: CKObject, ResultType: CKResult>(into object: CKBatchInsert<Object>) throws -> ResultType? {
         precondition("Attempted to batch insert an entity of type '\(logger.typeName(Object.self))'")
         
@@ -242,7 +242,7 @@ extension CKBaseOperation: FetchClause {
 private extension CKBaseOperation {
     
     func precondition(_ message: String, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
-        logger.assert(isRunningInAllowedQueue, message + runningCondition, file: file, line: line, function: function)
+        dispatchPrecondition(condition: .onQueue(queue))
         
         logger.assert(!isCommitted, message + committedCondition, file: file, line: line, function: function)
     }

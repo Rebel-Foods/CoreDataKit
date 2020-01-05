@@ -10,7 +10,7 @@ import Foundation
 
 public final class CKFetch<Object: CKObject> {
     
-    let fetchRequest: CKFetchRequest<CKFetchResult>
+    let fetchRequest: FetchRequest<CKFetchResult>
     
     /// Creates a default `NSFetchRequest` of `ManagedObject`.`
     public init() {
@@ -53,7 +53,7 @@ extension CKFetch {
     
     /// Customise `NSFetchRequest`.
     /// - Parameter requestBlock: The block to customize the `NSFetchRequest`.
-    public func customise(_ requestBlock: (CKFetchRequest<CKFetchResult>) -> Void) -> Self {
+    public func customise(_ requestBlock: (FetchRequest<CKFetchResult>) -> Void) -> Self {
         requestBlock(fetchRequest)
         return self
     }
@@ -62,14 +62,14 @@ extension CKFetch {
 // MARK: ORDER BY CLAUSE
 extension CKFetch {
     
-    /// `OrderBy` clause to create a `CKFetchRequest` with.
+    /// `OrderBy` clause to create a `FetchRequest` with.
     /// - Parameter sortKeys: Array of `OrderBy` clauses with KeyPath.
     public func orderBy<Value>(_ sortKeys: OrderBy<Object, Value>...) -> Self {
         fetchRequest.sortDescriptors = sortKeys.map { $0.descriptor }
         return self
     }
     
-    /// `OrderBy` clause to create a `CKFetchRequest` with.
+    /// `OrderBy` clause to create a `FetchRequest` with.
     /// - Parameter sortKeys: Array of `OrderBy` clauses with KeyPath.
     public func orderBy<Value>(_ sortKeys: [OrderBy<Object, Value>]) -> Self {
         fetchRequest.sortDescriptors = sortKeys.map { $0.descriptor }
@@ -78,7 +78,7 @@ extension CKFetch {
     
     /// The sort descriptors of the fetch request.
     ///
-    /// The sort descriptors specify how the objects returned when the CKFetchRequest is issued should be ordered—for example, by last name and then by first name. The sort descriptors are applied in the order in which they appear in the sortDescriptors array (serially in lowest-array-index-first order).
+    /// The sort descriptors specify how the objects returned when the FetchRequest is issued should be ordered—for example, by last name and then by first name. The sort descriptors are applied in the order in which they appear in the sortDescriptors array (serially in lowest-array-index-first order).
     ///
     /// A value of nil is treated as no sort descriptors.
     ///
@@ -90,7 +90,7 @@ extension CKFetch {
     
     /// The sort descriptors of the fetch request.
     ///
-    /// The sort descriptors specify how the objects returned when the CKFetchRequest is issued should be ordered—for example, by last name and then by first name. The sort descriptors are applied in the order in which they appear in the sortDescriptors array (serially in lowest-array-index-first order).
+    /// The sort descriptors specify how the objects returned when the FetchRequest is issued should be ordered—for example, by last name and then by first name. The sort descriptors are applied in the order in which they appear in the sortDescriptors array (serially in lowest-array-index-first order).
     ///
     /// A value of nil is treated as no sort descriptors.
     ///
@@ -131,14 +131,14 @@ extension CKFetch: WhereClause {
     }
     
     /// The predicate of the fetch request.
-    /// - Parameter predicate: The predicate instance constrains the selection of objects the `CKFetchRequest` instance is to fetch.
+    /// - Parameter predicate: The predicate instance constrains the selection of objects the `FetchRequest` instance is to fetch.
     public func `where`(_ predicate: CKPredicate?) -> Self {
         fetchRequest.predicate = predicate
         return self
     }
     
     /// The predicate of the fetch request.
-    /// - Parameter clause: `Where` clause to create a `CKFetchRequest` with.
+    /// - Parameter clause: `Where` clause to create a `FetchRequest` with.
     public func `where`(_ clause: Where<Object>) -> Self {
         fetchRequest.predicate = clause.predicate
         return self
@@ -201,7 +201,7 @@ extension CKFetch {
     
     /// Returns/sets the result type of the fetch request (the instance type of objects returned from executing the request.) Setting the value to `managedObjectIDResultType` will demote any sort orderings to "best effort" hints if property values are not included in the request.  Defaults to `managedObjectResultType`.
     /// - Parameter type: Result type of the fetch request.
-    func resultType(_ type: CKFetchRequestResultType) -> Self {
+    private func resultType(_ type: CKFetchRequestResultType) -> Self {
         fetchRequest.resultType = type
         return self
     }
@@ -309,7 +309,7 @@ extension CKFetch {
     ///
     /// If a `havingPredicate` value is supplied, the predicate will be run after .Specifying a havingPredicate requires that propertiesToGroupBy also be specified.
     ///
-    /// - Parameter predicate: The predicate instance constrains the selection of objects the `CKFetchRequest` instance is to fetch.
+    /// - Parameter predicate: The predicate instance constrains the selection of objects the `FetchRequest` instance is to fetch.
     public func having(_ predicate: CKPredicate) -> Self {
         fetchRequest.havingPredicate = predicate
         return self
@@ -319,7 +319,7 @@ extension CKFetch {
     ///
     /// If a `havingPredicate` value is supplied, the predicate will be run after .Specifying a havingPredicate requires that propertiesToGroupBy also be specified.
     ///
-    /// - Parameter clause: `Where` clause to create a `CKFetchRequest` with.
+    /// - Parameter clause: `Where` clause to create a `FetchRequest` with.
     public func having(_ clause: Where<Object>) -> Self {
         fetchRequest.havingPredicate = clause.predicate
         return self
@@ -328,7 +328,7 @@ extension CKFetch {
 
 extension CKFetch {
     
-    func format<Result: CKFetchResult>(to format: Result.Type) -> CKFetchRequest<Result> {
+    func format<Result: CKFetchResult>(to format: Result.Type) -> FetchRequest<Result> {
         
         switch format {
         case is NSNumber.Type:
@@ -347,6 +347,6 @@ extension CKFetch {
             break
         }
         
-        return fetchRequest as! CKFetchRequest<Result>
+        return fetchRequest as! FetchRequest<Result>
     }
 }

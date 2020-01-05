@@ -8,16 +8,20 @@
 
 import Foundation
 
-public final class CoreDataKit {
+public class CoreDataKit {
     
     /// The default instance with database name being application's name.
-    public static let `default` = CoreDataKit()
+    private static let `internalDefault` = CoreDataKit()
+    
+    public class var `default`: CoreDataKit {
+        internalDefault
+    }
     
     /// Core Data Stack associated with this instance.
-    public let stack: CoreDataStack
+    private let stack: CKStack
     
     /// Allows the `CoreDataKit` to log errors and other information in the debug console.
-    public var enableLogging: Bool {
+    public var isLoggingEnabled: Bool {
         get {
             logger.isEnabled
         } set {
@@ -29,10 +33,16 @@ public final class CoreDataKit {
     
     let logger: CKLogger
     
-    /// Intializes an instance of `CoreDataKit` with the given database name.
-    /// - Parameter databaseName: Database name.
-    public init(databaseName: String) {
-        stack = CoreDataStack(databaseName: databaseName)
+    init(stack: CKStack, queue: DispatchQueue) {
+        self.stack = stack
+        self.queue = queue
+        logger = CKLogger(isEnabled: true)
+    }
+    
+    /// Intializes an instance of `CoreDataKit` with the given model name.
+    /// - Parameter name: Core Data Model name.
+    public init(model name: String) {
+        stack = CKCoreDataStack(modelName: name)
         queue = DispatchQueue(label: "com.CoreDataKit.contextQueue", qos: .default,
                               attributes: [], autoreleaseFrequency: .inherit, target: nil)
         logger = CKLogger(isEnabled: true)
@@ -40,16 +50,37 @@ public final class CoreDataKit {
     
     public convenience init() {
         let databaseName = Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String ?? "Database"
-        self.init(databaseName: databaseName)
+        self.init(model: databaseName)
     }
 }
 
+// MARK: STORE DESCRIPTIONS
+extension CoreDataKit: CKStoreDescriptionMethods {
+    
+    public func addStoreDescriptions(_ descriptions: [CKStoreDescription]) {
+        stack.addStoreDescriptions(descriptions)
+    }
+    
+    public func addStoreDescriptions(_ descriptions: CKStoreDescription...) {
+        stack.addStoreDescriptions(descriptions)
+    }
+    
+    public func replaceStoreDescriptions(with descriptions: [CKStoreDescription]) {
+        stack.replaceStoreDescriptions(with: descriptions)
+    }
+    
+    public func replaceStoreDescriptions(with descriptions: CKStoreDescription...) {
+        stack.replaceStoreDescriptions(with: descriptions)
+    }
+    
+    public func loadPersistentStores(block: ((CKStoreDescription, NSError) -> Void)?) {
+        stack.loadPersistentStores(block: block)
+    }
+}
+
+// MARK: DATABASE OPERATIONS
 public extension CoreDataKit {
     
-    /// <#Description#>
-    /// - Parameter workItem: <#workItem description#>
-    /// - Throws:
-    /// - Returns:
     func perform<T>(synchronous workItem: (CKSynchronousOperation) throws -> T) throws -> T {
         let operation = CKSynchronousOperation(context: stack.newBackgroundTask(), queue: queue, logger: logger)
 
@@ -62,7 +93,7 @@ public extension CoreDataKit {
             let output: T
 
             do {
-                output = try workItem(operation)//withoutActuallyEscaping(workItem, do: { try $0(operation) })
+                output = try workItem(operation)
             }
             catch let error as NSError {
                 throw error
@@ -112,6 +143,7 @@ public extension CoreDataKit {
     }
 }
 
+// MARK: FETCH CLAUSE
 extension CoreDataKit: FetchClause {
     
     public func fetch<Object>(_ request: CKFetch<Object>) throws -> [Object] where Object : CKObject {
@@ -169,12 +201,13 @@ extension CoreDataKit: FetchClause {
 private extension CoreDataKit {
     
     func precondition(file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
-        logger.assert(
-            Thread.isMainThread,
-            "Attempted to fetch from a \(logger.typeName(self)) outside the main thread.",
-            file: file,
-            line: line,
-            function: function
-        )
+        dispatchPrecondition(condition: DispatchPredicate.onQueue(.main))
+//        logger.assert(
+//            Thread.isMainThread,
+//            "Attempted to fetch from a \(logger.typeName(self)) outside the main thread.",
+//            file: file,
+//            line: line,
+//            function: function
+//        )
     }
 }

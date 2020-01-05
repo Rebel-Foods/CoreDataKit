@@ -232,7 +232,7 @@ extension CKContext {
 
 extension CKContext {
 
-    @available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     func batchInsert<Object: CKObject>(_ object: CKBatchInsert<Object>, resultType: CKBatchInsertResultType) throws -> CKBatchInsertResult {
         let batchInsertRequest = object.batchInsertRequest
         batchInsertRequest.resultType = resultType
