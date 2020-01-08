@@ -1,12 +1,12 @@
 //
-//  CKBaseOperation.swift
+//  Base Operation.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 18/10/19.
 //  Copyright © 2019 Raghav Ahuja. All rights reserved.
 //
 
-import CoreData
+import Foundation
 
 public class /*abstract*/ CKBaseOperation {
     
@@ -63,20 +63,13 @@ public extension CKBaseOperation {
     
     /// Batch insert of data in a persistent store without loading any data or object into memory.
     /// - Parameter object: `CKBatchInsert` object containing the batch data to be inserted.
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func batchInsert<Object: CKObject>(into object: CKBatchInsert<Object>) throws {
-        let _: Bool? = try batchInsert(into: object)
-    }
-    
-    /// Batch insert of data in a persistent store without loading any data or object into memory.
-    /// - Parameter object: `CKBatchInsert` object containing the batch data to be inserted.
     /// - Returns: Type of `CKResult`. It can be `Int` for count, `Bool` for status or an array of `CKObjectId` indicating Ids for deleted objects.
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func batchInsert<Object: CKObject, ResultType: CKResult>(into object: CKBatchInsert<Object>) throws -> ResultType? {
+    func batchInsert<Object: CKObject, ResultType: CKResult>(into object: CKBatchInsert<Object, ResultType>) throws -> ResultType.CKType {
         precondition("Attempted to batch insert an entity of type '\(logger.typeName(Object.self))'")
         
-        let result = try context.batchInsert(object, resultType: ResultType.ckResultType.batchInsert)
-        return result.result as? ResultType
+        let result = try context.batchInsert(object)
+        return result.result as! ResultType.CKType
     }
 }
 
@@ -104,18 +97,12 @@ public extension CKBaseOperation {
     
     /// Batch update of data in a persistent store without loading any data into memory.
     /// - Parameter object: A `CKBatchUpdate` containing the configuarion.
-    func batchUpdate<Object: CKObject>(into object: CKBatchUpdate<Object>) throws {
-        let _: Bool? = try batchUpdate(into: object)
-    }
-    
-    /// Batch update of data in a persistent store without loading any data into memory.
-    /// - Parameter object: A `CKBatchUpdate` containing the configuarion.
     /// - Returns: Type of `CKResult`. It can be `Int` for count, `Bool` for status or an array of `CKObjectId` indicating Ids for deleted objects.
-    func batchUpdate<Object: CKObject, Result: CKResult>(into object: CKBatchUpdate<Object>) throws -> Result? {
+    func batchUpdate<Object: CKObject, Result: CKResult>(into object: CKBatchUpdate<Object, Result>) throws -> Result.CKType {
         precondition("Attempted to batch update an entity of type \(logger.typeName(Object.self))")
         
-        let result = try context.batchUpdate(object, resultType: Result.ckResultType.batchUpdate)
-        return result.result as? Result
+        let result = try context.batchUpdate(object)
+        return result.result as! Result.CKType
     }
 }
 
@@ -164,23 +151,14 @@ public extension CKBaseOperation {
         try context.delete(request)
     }
     
-    
-    /// A request to do a batch delete of data in a persistent store without loading any data into memory.
-    /// - Parameter request: A `CKFetch` request indicating the entity type and clauses.
-    func batchDelete<Object>(_ request: CKFetch<Object>) throws {
-        precondition("Attempted to delete from entity of type '\(logger.typeName(Object.self))'")
-        
-        _ = try context.batchDelete(request, resultType: .resultTypeStatusOnly)
-    }
-    
     /// A request to do a batch delete of data in a persistent store without loading any data into memory.
     /// - Parameter request: A `CKFetch` request indicating the entity type and clauses.
     /// - Returns: Type of `CKResult`. It can be `Int` for count, `Bool` for status or an array of `CKObjectId` indicating Ids for deleted objects.
-    func batchDelete<Object, Result: CKResult>(_ request: CKFetch<Object>) throws -> Result? {
-        precondition("Attempted to delete from entity of type '\(logger.typeName(Object.self))'")
+    func batchDelete<Result: CKResult>(_ request: CKBatchDelete<Result>) throws -> Result.CKType {
+        precondition("Attempted to delete from entity of type '\(request.type)'")
         
-        let result = try context.batchDelete(request, resultType: Result.ckResultType.batchDelete)
-        return result.result as? Result
+        let result = try context.batchDelete(request)
+        return result.result as! Result.CKType
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  CKQueryable.swift
+//  Queryable.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 18/10/19.
@@ -15,7 +15,7 @@ public typealias CKEquatableQuery = CKQueryable & Equatable
 public typealias CKComparableQuery = CKQueryable & Comparable
 
 /**
- Types supported by CoreDatabase for querying, especially as generic type for `Fetch` clauses.
+ Types supported by `CoreDataKit` for querying, especially as generic type for `Fetch` clauses.
  Supported default types:
  - `Bool`
  - `CGFloat`

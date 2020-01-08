@@ -1,5 +1,5 @@
 //
-//  CKSynchronousOperation.swift
+//  Synchronous Operation.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 18/10/19.

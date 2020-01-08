@@ -1,12 +1,12 @@
 //
-//  File.swift
-//  
+//  Fetch Request.swift
+//  CoreDataKit
 //
-//  Created by Raghav Ahuja on 05/01/20.
+//  Created by Raghav Ahuja on 06/01/20.
+//  Copyright © 2019 Raghav Ahuja. All rights reserved.
 //
 
 import Foundation
-import CoreData
 import PublisherKit
 
 @propertyWrapper
@@ -28,7 +28,7 @@ public struct CKFetchRequest<Result: CKFetchResult> {
     ///   - predicate: An NSPredicate defines a filter for the fetched results.
     ///   - animation: The animation used for any changes to the fetched
     ///     results.
-    public init(entity: NSEntityDescription, sortDescriptors: [NSSortDescriptor], predicate: NSPredicate? = nil) {
+    public init(entity: CKEntityDescription, sortDescriptors: [CKSortDescriptor], predicate: CKPredicate? = nil) {
         fetchRequest = FetchRequest<Result>(entityName: entity.managedObjectClassName)
         fetchRequest.sortDescriptors = sortDescriptors
         fetchRequest.predicate = predicate
@@ -66,7 +66,7 @@ extension CKFetchRequest where Result: CKObject {
     ///   - predicate: An NSPredicate defines a filter for the fetched results.
     ///   - animation: The animation used for any changes to the fetched
     ///     results.
-    public init(sortDescriptors: [NSSortDescriptor], predicate: NSPredicate? = nil) {
+    public init(sortDescriptors: [CKSortDescriptor], predicate: CKPredicate? = nil) {
         fetchRequest = FetchRequest<Result>(entityName: Result.entity().managedObjectClassName)
         fetchRequest.sortDescriptors = sortDescriptors
         fetchRequest.predicate = predicate

@@ -6,7 +6,7 @@
 //  Copyright © 2019 Raghav Ahuja. All rights reserved.
 //
 
-import CoreData
+import Foundation
 
 extension CKObject {
     
@@ -14,7 +14,7 @@ extension CKObject {
         object_getClass(instance) as! T.Type
     }
     
-    class func downcast(object: NSManagedObject) -> Self {
+    class func downcast(object: CKObject) -> Self {
         unsafeDowncast(object, to: self)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  CKCoreDataCloudStack.swift
+//  CoreData Cloud Stack.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 06/01/20.

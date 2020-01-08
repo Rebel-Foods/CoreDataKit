@@ -6,31 +6,31 @@
 //  Copyright © 2019 Raghav Ahuja. All rights reserved.
 //
 
-import CoreData
+import Foundation
 
-public enum OrderBy<T: NSManagedObject, Value>: Hashable, Equatable {
+public enum OrderBy<Object: CKObject, Value>: Hashable, Equatable {
     
-    case ascending(KeyPath<T, Value>)
-    case descending(KeyPath<T, Value>)
+    case ascending(KeyPath<Object, Value>)
+    case descending(KeyPath<Object, Value>)
     
-    case ascendingReversed(KeyPath<T, Value>)
-    case descendingReversed(KeyPath<T, Value>)
+    case ascendingReversed(KeyPath<Object, Value>)
+    case descendingReversed(KeyPath<Object, Value>)
     
-    internal var descriptor: NSSortDescriptor {
+    internal var descriptor: CKSortDescriptor {
         switch self {
         case .ascending(let keyPath):
-            return NSSortDescriptor(keyPath: keyPath, ascending: true)
+            return CKSortDescriptor(keyPath: keyPath, ascending: true)
             
         case .descending(let keyPath):
-            return NSSortDescriptor(keyPath: keyPath, ascending: false)
+            return CKSortDescriptor(keyPath: keyPath, ascending: false)
             
         case .ascendingReversed(let keyPath):
-            let sortDescriptor = NSSortDescriptor(keyPath: keyPath, ascending: true)
-            return sortDescriptor.reversedSortDescriptor as! NSSortDescriptor
+            let sortDescriptor = CKSortDescriptor(keyPath: keyPath, ascending: true)
+            return sortDescriptor.reversedSortDescriptor as! CKSortDescriptor
             
         case .descendingReversed(let keyPath):
-            let sortDescriptor = NSSortDescriptor(keyPath: keyPath, ascending: false)
-            return sortDescriptor.reversedSortDescriptor as! NSSortDescriptor
+            let sortDescriptor = CKSortDescriptor(keyPath: keyPath, ascending: false)
+            return sortDescriptor.reversedSortDescriptor as! CKSortDescriptor
         }
     }
 }

@@ -1,28 +1,28 @@
 //
-//  FetchClause.swift
+//  Asynchronous Fetch Clause.swift
 //  CoreDataKit
 //
-//  Created by Raghav Ahuja on 18/10/19.
+//  Created by Raghav Ahuja on 08/01/20.
 //  Copyright © 2019 Raghav Ahuja. All rights reserved.
 //
 
 import Foundation
 
-public protocol FetchClause {
+public protocol AsynchronousFetchClause {
     
     /// Fetches all `CKObject` instances that satisfy the specified fetch clauses provided.
     /// - Parameter request: A `CKFetch` request indicating the entity type and clauses.
     /// - Throws: If there is a problem executing the fetch, upon return contains an instance of NSError that describes the problem.
     /// Returns an array of objects that meet the criteria specified by a given fetch request.
     /// - Returns: An array of `CKObject` type objects that meet the criteria specified by the given `CKFetch` request.
-    func fetch<Object: CKObject>(_ request: CKFetch<Object>) throws -> [Object]
+    func fetch<Object: CKObject>(_ request: CKFetch<Object>, completion: @escaping (Result<[Object], NSError>) -> Void)
     
     
     /// Fetches one `CKObject` instance that satisfy the specified fetch clauses provided.
     /// - Parameter request: A `CKFetch` request indicating the entity type and clauses.
     /// - Throws: If there is a problem executing the fetch, upon return contains an instance of NSError that describes the problem.
     /// - Returns: A type of `CKObject` that meets the criteria specified by the given `CKFetch` request if it exists.
-    func fetchFirst<Object: CKObject>(_ request: CKFetch<Object>) throws -> Object?
+    func fetchFirst<Object: CKObject>(_ request: CKFetch<Object>, completion: @escaping (Result<Object, NSError>) -> Void)
     
     
     /// Returns the `CKObject` registered to current `CKContext` for the specified `CKObject` or nil if it does not exist.
@@ -34,7 +34,7 @@ public protocol FetchClause {
     /// - Parameter object: The object for the requested object.
     /// - Throws: If there is a problem executing the fetch, upon return contains an instance of NSError that describes the problem.
     /// - Returns: A type of `CKObject` for the given `CKObject` if it exists.
-    func fetchExisting<Object: CKObject>(_ object: Object) -> Object?
+    func fetchExisting<Object: CKObject>(_ object: Object, completion: @escaping (Result<Object, NSError>) -> Void)
     
     
     /// Returns the `CKObject` registered to current `CKContext` for the specified `CKObject` or nil if it does not exist.
@@ -46,7 +46,7 @@ public protocol FetchClause {
     /// - Parameter objectId: The `CKObjectId` for the requested `CKObject`.
     /// - Throws: If there is a problem executing the fetch, upon return contains an instance of NSError that describes the problem.
     /// - Returns: A type of `CKObject` for the given `CKObjectId` if it exists.
-    func fetchExisting<Object: CKObject>(with objectId: CKObjectId) -> Object?
+    func fetchExisting<Object: CKObject>(with objectId: CKObjectId, completion: @escaping (Result<Object, NSError>) -> Void)
     
     
     /// Returns the `CKObject`s registered to current `CKContext` for the specified `CKObject`s. A `CKObject` which cannot be found in the current `CKContext` is not returned.
@@ -58,7 +58,7 @@ public protocol FetchClause {
     /// - Parameter objects: An array of objects registered to the current context for the requested objects.
     /// - Throws: If there is a problem executing the fetch, upon return contains an instance of NSError that describes the problem.
     /// - Returns: An array of exisiting `CKObject` type objects for the given `CKObjects`s.
-    func fetchExisting<Object: CKObject, S: Sequence>(_ objects: S) -> [Object] where S.Iterator.Element == Object
+    func fetchExisting<Object: CKObject, S: Sequence>(_ objects: S, completion: @escaping (Result<[Object], NSError>) -> Void) where S.Iterator.Element == Object
     
     
     /// Returns the `CKObject`s registered to current `CKContext` for the specified `CKObjectId`s. A `CKObject` which cannot be found for the given `CKObjectId` in the current `CKContext` is not returned.
@@ -70,28 +70,28 @@ public protocol FetchClause {
     /// - Parameter objectIds: An array of object IDs for the requested objects.
     /// - Throws: If there is a problem executing the fetch, upon return contains an instance of NSError that describes the problem.
     /// - Returns: An array of exisiting `CKObject` type objects for the given `CKObjectId`s.
-    func fetchExisting<Object: CKObject, S: Sequence>(_ objectIds: S) -> [Object] where S.Iterator.Element == CKObjectId
+    func fetchExisting<Object: CKObject, S: Sequence>(_ objectIds: S, completion: @escaping (Result<[Object], NSError>) -> Void) where S.Iterator.Element == CKObjectId
     
     
     /// Fetches `CKObjectId` instances that satisfy the specified fetch clauses provided.
     /// - Parameter request: A `CKFetch` request indicating the entity type and clauses.
     /// - Throws: If there is a problem executing the fetch, upon return contains an instance of NSError that describes the problem.
     /// - Returns: An array of `CKObjectId` type that meet the criteria specified by the given `CKFetch` request.
-    func fetchIds<Object: CKObject>(_ request: CKFetch<Object>) throws -> [CKObjectId]
+    func fetchIds<Object: CKObject>(_ request: CKFetch<Object>, completion: @escaping (Result<[CKObjectId], NSError>) -> Void)
     
     
     /// Fetches `NSDictionary` instances that satisfy the specified fetch clauses provided.
     /// - Parameter request: A `CKFetch` request indicating the entity type and clauses.
     /// - Throws: If there is a problem executing the fetch, upon return contains an instance of NSError that describes the problem.
     /// - Returns: An array of `NSDictionary` that meet the criteria specified by the given `CKFetch` request.
-    func query<Object: CKObject>(_ request: CKFetch<Object>) throws -> [NSDictionary]
+    func query<Object: CKObject>(_ request: CKFetch<Object>, completion: @escaping (Result<[NSDictionary], NSError>) -> Void)
     
     
     /// Returns the number of objects a given `CKFetch` request would have returned if it had been executed.
     /// - Parameter request: A `CKFetch` request indicating the entity type and clauses.
     /// - Throws: If there is a problem executing the fetch, upon return contains an instance of `NSError` that describes the problem.
     /// - Returns: The number of objects a given `CKFetch` request would have returned if it had been passed to `fetch(_:)`.
-    func count<Object: CKObject>(for request: CKFetch<Object>) throws -> Int
+    func count<Object: CKObject>(for request: CKFetch<Object>, completion: @escaping (Result<Int, NSError>) -> Void)
     
     
     /// An internal object space that you use to manipulate and track changes to `CKObject`s.

@@ -1,5 +1,5 @@
 //
-//  CKPersistentContainer.swift
+//  Cloud Persisten tContainer.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 06/01/20.
@@ -8,7 +8,8 @@
 
 import Foundation
 
-final class CKPersistentContainer: CKContainer, CKContainerType {
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+final class CKCloudPersistentContainer: CKCloudContainer, CKContainerType {
     
     let mainContext = CKContext(concurrencyType: .mainQueueConcurrencyType)
     

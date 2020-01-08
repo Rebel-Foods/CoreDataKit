@@ -19,12 +19,19 @@ public typealias CKStoreDescription = NSPersistentStoreDescription
 
 public typealias CKObjectModel = NSManagedObjectModel
 
+public typealias CKCoordinator = NSPersistentStoreCoordinator
+
 
 public typealias CKObject = NSManagedObject
 
 public typealias CKObjectId = NSManagedObjectID
 
 public typealias CKContext = NSManagedObjectContext
+
+
+public typealias AsynchronousFetchRequest<Result: CKFetchResult> = NSAsynchronousFetchRequest<Result>
+
+public typealias AsynchronousFetchResult<Result: CKFetchResult> = NSAsynchronousFetchResult<Result>
 
 
 public typealias FetchRequest<Result: CKFetchResult> = NSFetchRequest<Result>
@@ -80,3 +87,7 @@ public typealias CKMergePolicyType = NSMergePolicyType
 ///
 /// Conflicts are represented by instances of [NSMergeConflict](apple-reference-documentation://hstmK0FPJu).
 public typealias CKMergePolicy = NSMergePolicy
+
+public typealias CKSortDescriptor = NSSortDescriptor
+
+public typealias CKEntityDescription = NSEntityDescription

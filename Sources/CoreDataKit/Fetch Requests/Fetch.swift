@@ -1,5 +1,5 @@
 //
-//  CKFetch.swift
+//  Fetch.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 18/10/19.
@@ -12,10 +12,13 @@ public final class CKFetch<Object: CKObject> {
     
     let fetchRequest: FetchRequest<CKFetchResult>
     
-    /// Creates a default `NSFetchRequest` of `ManagedObject`.`
+    /// Creates a default `NSFetchRequest` for the given `CKObject`.`
     public init() {
         fetchRequest = Object.self.fetchRequest()
     }
+}
+
+extension CKFetch {
     
     // MARK: FETCH BATCH SIZE CLAUSE
     
@@ -102,7 +105,7 @@ extension CKFetch {
 }
 
 // MARK: WHERE CLAUSE
-extension CKFetch: WhereClause {
+extension CKFetch {
     
     /// Initializes a predicate by substituting the values in a given array into a format string and parsing the result.
     /// - Parameter format: The format string for the new predicate.

@@ -1,12 +1,13 @@
 //
-//  CKCoreDataStack.swift
+//  Storage Keys.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 18/10/19.
 //  Copyright © 2019 Raghav Ahuja. All rights reserved.
 //
 
-import CoreData
+import Foundation
 
-final class CKCoreDataStack: CKBaseStack<CKPersistentContainer> {
+public protocol StorageKeys: Hashable {
+    var key: String { get }
 }

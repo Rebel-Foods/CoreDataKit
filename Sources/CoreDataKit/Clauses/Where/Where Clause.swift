@@ -1,5 +1,5 @@
 //
-//  WhereClause.swift
+//  Where Clause.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 18/10/19.

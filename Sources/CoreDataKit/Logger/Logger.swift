@@ -1,5 +1,5 @@
 //
-//  CKLogger.swift
+//  Logger.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 18/10/19.
@@ -32,7 +32,7 @@ final class CKLogger {
      - parameter line: Source line number.
      - parameter function: Source function name.
      */
-    func log(error: CKError, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
+    func log(error: NSError, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
         
         #if DEBUG
         guard isEnabled else { return }

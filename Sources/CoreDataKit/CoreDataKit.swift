@@ -10,6 +10,8 @@ import Foundation
 
 public class CoreDataKit {
     
+    static var errorDomain = "CKErrorDomain"
+    
     /// The default instance with database name being application's name.
     private static let `internalDefault` = CoreDataKit()
     
@@ -43,8 +45,7 @@ public class CoreDataKit {
     /// - Parameter name: Core Data Model name.
     public init(model name: String) {
         stack = CKCoreDataStack(modelName: name)
-        queue = DispatchQueue(label: "com.CoreDataKit.contextQueue", qos: .default,
-                              attributes: [], autoreleaseFrequency: .inherit, target: nil)
+        queue = DispatchQueue(label: "com.CoreDataKit.\(name)-context-thread", qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
         logger = CKLogger(isEnabled: true)
     }
     
@@ -128,13 +129,9 @@ public extension CoreDataKit {
                 }
 
                 switch result {
-                case .success(let success):
-                    if success {
-                        completion(.success(output))
-                    } else {
-                        DispatchQueue.main.async { completion(.failure(NSError(domain: NSCocoaErrorDomain, code: 0101, userInfo: nil))) }
-                    }
-
+                case .success:
+                    completion(.success(output))
+                    
                 case .failure(let error):
                     DispatchQueue.main.async { completion(.failure(error)) }
                 }
@@ -201,13 +198,71 @@ extension CoreDataKit: FetchClause {
 private extension CoreDataKit {
     
     func precondition(file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
-        dispatchPrecondition(condition: DispatchPredicate.onQueue(.main))
-//        logger.assert(
-//            Thread.isMainThread,
-//            "Attempted to fetch from a \(logger.typeName(self)) outside the main thread.",
-//            file: file,
-//            line: line,
-//            function: function
-//        )
+//        dispatchPrecondition(condition: DispatchPredicate.onQueue(.main))
+        logger.assert(
+            Thread.isMainThread,
+            "Attempted to fetch using \(function) outside the main thread.",
+            file: file,
+            line: line,
+            function: function
+        )
+    }
+}
+
+// MARK: ASYNCHRONOUS FETCH CLAUSE
+extension CoreDataKit: AsynchronousFetchClause {
+    
+    public func fetch<Object>(_ request: CKFetch<Object>, completion: @escaping (Result<[Object], NSError>) -> Void) where Object : CKObject {
+        precondition()
+        
+        stack.viewContext.fetch(request, completion: completion)
+    }
+    
+    public func fetchFirst<Object>(_ request: CKFetch<Object>, completion: @escaping (Result<Object, NSError>) -> Void) where Object : CKObject {
+        precondition()
+        
+        stack.viewContext.fetchFirst(request, completion: completion)
+    }
+    
+    public func fetchExisting<Object>(_ object: Object, completion: @escaping (Result<Object, NSError>) -> Void) where Object : CKObject {
+        precondition()
+        
+        stack.viewContext.fetchExisting(object, completion: completion)
+    }
+    
+    public func fetchExisting<Object>(with objectId: CKObjectId, completion: @escaping (Result<Object, NSError>) -> Void) where Object : CKObject {
+        precondition()
+        
+        stack.viewContext.fetchExisting(with: objectId, completion: completion)
+    }
+    
+    public func fetchExisting<Object, S>(_ objects: S, completion: @escaping (Result<[Object], NSError>) -> Void) where Object : CKObject, Object == S.Element, S : Sequence {
+        precondition()
+        
+        stack.viewContext.fetchExisting(objects, completion: completion)
+    }
+    
+    public func fetchExisting<Object, S>(_ objectIds: S, completion: @escaping (Result<[Object], NSError>) -> Void) where Object : CKObject, S : Sequence, S.Element == CKObjectId {
+        precondition()
+        
+        stack.viewContext.fetchExisting(objectIds, completion:  completion)
+    }
+    
+    public func fetchIds<Object>(_ request: CKFetch<Object>, completion: @escaping (Result<[CKObjectId], NSError>) -> Void) where Object : CKObject {
+        precondition()
+        
+        stack.viewContext.fetchIds(request, completion: completion)
+    }
+    
+    public func query<Object>(_ request: CKFetch<Object>, completion: @escaping (Result<[NSDictionary], NSError>) -> Void) where Object : CKObject {
+        precondition()
+        
+        stack.viewContext.query(request, completion: completion)
+    }
+    
+    public func count<Object>(for request: CKFetch<Object>, completion: @escaping (Result<Int, NSError>) -> Void) where Object : CKObject {
+        precondition()
+        
+        stack.viewContext.count(for: request, completion: completion)
     }
 }

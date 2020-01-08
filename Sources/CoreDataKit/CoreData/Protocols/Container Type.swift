@@ -1,5 +1,5 @@
 //
-//  CKContainerType.swift
+//  Container Type.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 06/01/20.

@@ -1,5 +1,5 @@
 //
-//  StorageKeys.swift
+//  CoreData Stack.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 18/10/19.
@@ -8,6 +8,5 @@
 
 import Foundation
 
-public protocol StorageKeys: Hashable {
-    var key: String { get }
+final class CKCoreDataStack: CKBaseStack<CKPersistentContainer> {
 }

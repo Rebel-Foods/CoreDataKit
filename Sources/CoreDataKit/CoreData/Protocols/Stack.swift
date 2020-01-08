@@ -1,5 +1,5 @@
 //
-//  CKStack.swift
+//  Stack.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 06/01/20.

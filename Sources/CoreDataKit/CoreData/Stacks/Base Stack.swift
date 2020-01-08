@@ -1,5 +1,5 @@
 //
-//  CKBaseStack.swift
+//  Base Stack.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 06/01/20.
@@ -22,7 +22,7 @@ class CKBaseStack<Container: CKContainer & CKContainerType>: CKStack {
 }
 
 // MARK: MIGRATION
-extension CKBaseStack {
+extension CKBaseStack: CKStoreDescriptionMethods {
     
     @inline(__always)
     func addStoreDescriptions(_ descriptions: [CKStoreDescription]) {
@@ -52,7 +52,7 @@ extension CKBaseStack {
             persistentContainer.loadPersistentStores { (storeDescription, error) in
                 
                 if let error = error as NSError? {
-                    CoreDataKit.default.logger.log(error: CKError(error))
+                    CoreDataKit.default.logger.log(error: error)
                     
                     if let block = block {
                         block(storeDescription, error)
