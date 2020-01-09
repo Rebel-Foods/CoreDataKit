@@ -16,7 +16,7 @@ public enum OrderBy<Object: CKObject, Value>: Hashable, Equatable {
     case ascendingReversed(KeyPath<Object, Value>)
     case descendingReversed(KeyPath<Object, Value>)
     
-    internal var descriptor: CKSortDescriptor {
+    var descriptor: CKSortDescriptor {
         switch self {
         case .ascending(let keyPath):
             return CKSortDescriptor(keyPath: keyPath, ascending: true)

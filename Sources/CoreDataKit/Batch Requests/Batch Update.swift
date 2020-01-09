@@ -61,14 +61,14 @@ extension CKBatchUpdate: WhereClause {
     /// - Parameter format: The format string for the new predicate.
     /// - Parameter args: The arguments to substitute into predicateFormat. Values are substituted in the order they appear in the array.
     public func `where`(_ format: String, args: CVarArg...) -> Self {
-        batchUpdateRequest.predicate = CKPredicate(format: format, args)
+        batchUpdateRequest.predicate = NSPredicate(format: format, args)
         return self
     }
     
     /// Creates and returns a predicate that always evaluates to a given Boolean value.
     /// - Parameter value: The Boolean value to which the new predicate should evaluate.
     public func `where`(_ value: Bool) -> Self {
-        batchUpdateRequest.predicate = CKPredicate(value: value)
+        batchUpdateRequest.predicate = NSPredicate(value: value)
         return self
     }
     
@@ -76,21 +76,21 @@ extension CKBatchUpdate: WhereClause {
     /// - Parameter format: The format string for the new predicate.
     /// - Parameter args: The arguments to substitute into predicateFormat. Values are substituted in the order they appear in the array.
     public func `where`(_ format: String, argumentArray: [Any]?) -> Self {
-        let p = CKPredicate(format: format, argumentArray: argumentArray)
+        let p = NSPredicate(format: format, argumentArray: argumentArray)
         batchUpdateRequest.predicate = p
         return self
     }
     
     /// The predicate of the fetch request.
     /// - Parameter predicate: The predicate instance constrains the selection of objects the `FetchRequest` instance is to fetch.
-    public func `where`(_ predicate: CKPredicate?) -> Self {
+    public func `where`(_ predicate: NSPredicate?) -> Self {
         batchUpdateRequest.predicate = predicate
         return self
     }
     
     /// The predicate of the fetch request.
-    /// - Parameter clause: `Where` clause to create a `FetchRequest` with.
-    public func `where`(_ clause: Where<Object>) -> Self {
+    /// - Parameter clause: `CKPredicate` clause to create a `FetchRequest` with.
+    public func `where`(_ clause: CKPredicate<Object>) -> Self {
         batchUpdateRequest.predicate = clause.predicate
         return self
     }

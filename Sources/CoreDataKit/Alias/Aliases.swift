@@ -72,7 +72,7 @@ public typealias CKBatchInsertResultType = NSBatchInsertRequestResultType
 public typealias CKBatchInsertResult = NSBatchInsertResult
 
 
-public typealias CKPredicate = NSPredicate
+public typealias NSPredicate = CoreData.NSPredicate
 
 public typealias CKFetchedResultsController<ResultType: CKFetchResult> = NSFetchedResultsController<ResultType>
 

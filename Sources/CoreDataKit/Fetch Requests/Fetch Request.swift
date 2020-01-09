@@ -28,7 +28,7 @@ public struct CKFetchRequest<Result: CKFetchResult> {
     ///   - predicate: An NSPredicate defines a filter for the fetched results.
     ///   - animation: The animation used for any changes to the fetched
     ///     results.
-    public init(entity: CKEntityDescription, sortDescriptors: [CKSortDescriptor], predicate: CKPredicate? = nil) {
+    public init(entity: CKEntityDescription, sortDescriptors: [CKSortDescriptor], predicate: NSPredicate? = nil) {
         fetchRequest = FetchRequest<Result>(entityName: entity.managedObjectClassName)
         fetchRequest.sortDescriptors = sortDescriptors
         fetchRequest.predicate = predicate
@@ -66,7 +66,7 @@ extension CKFetchRequest where Result: CKObject {
     ///   - predicate: An NSPredicate defines a filter for the fetched results.
     ///   - animation: The animation used for any changes to the fetched
     ///     results.
-    public init(sortDescriptors: [CKSortDescriptor], predicate: CKPredicate? = nil) {
+    public init(sortDescriptors: [CKSortDescriptor], predicate: NSPredicate? = nil) {
         fetchRequest = FetchRequest<Result>(entityName: Result.entity().managedObjectClassName)
         fetchRequest.sortDescriptors = sortDescriptors
         fetchRequest.predicate = predicate

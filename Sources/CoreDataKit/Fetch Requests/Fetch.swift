@@ -111,7 +111,7 @@ extension CKFetch {
     /// - Parameter format: The format string for the new predicate.
     /// - Parameter args: The arguments to substitute into predicateFormat. Values are substituted in the order they appear in the array.
     public func `where`(_ format: String, args: CVarArg...) -> Self {
-        let predicate = CKPredicate(format: format, args)
+        let predicate = NSPredicate(format: format, args)
         fetchRequest.predicate = predicate
         return self
     }
@@ -119,7 +119,7 @@ extension CKFetch {
     /// Creates and returns a predicate that always evaluates to a given Boolean value.
     /// - Parameter value: The Boolean value to which the new predicate should evaluate.
     public func `where`(_ value: Bool) -> Self {
-        let predicate = CKPredicate(value: value)
+        let predicate = NSPredicate(value: value)
         fetchRequest.predicate = predicate
         return self
     }
@@ -128,21 +128,21 @@ extension CKFetch {
     /// - Parameter format: The format string for the new predicate.
     /// - Parameter args: The arguments to substitute into predicateFormat. Values are substituted in the order they appear in the array.
     public func `where`(_ format: String, argumentArray: [Any]?) -> Self {
-        let predicate = CKPredicate(format: format, argumentArray: argumentArray)
+        let predicate = NSPredicate(format: format, argumentArray: argumentArray)
         fetchRequest.predicate = predicate
         return self
     }
     
     /// The predicate of the fetch request.
     /// - Parameter predicate: The predicate instance constrains the selection of objects the `FetchRequest` instance is to fetch.
-    public func `where`(_ predicate: CKPredicate?) -> Self {
+    public func `where`(_ predicate: NSPredicate?) -> Self {
         fetchRequest.predicate = predicate
         return self
     }
     
     /// The predicate of the fetch request.
-    /// - Parameter clause: `Where` clause to create a `FetchRequest` with.
-    public func `where`(_ clause: Where<Object>) -> Self {
+    /// - Parameter clause: `CKPredicate` clause to create a `FetchRequest` with.
+    public func `where`(_ clause: CKPredicate<Object>) -> Self {
         fetchRequest.predicate = clause.predicate
         return self
     }
@@ -280,7 +280,7 @@ extension CKFetch {
     /// - Parameter format: The format string for the new predicate.
     /// - Parameter args: The arguments to substitute into predicateFormat. Values are substituted in the order they appear in the array.
     public func having(_ format: String, args: CVarArg...) -> Self {
-        let predicate = CKPredicate(format: format, args)
+        let predicate = NSPredicate(format: format, args)
         fetchRequest.havingPredicate = predicate
         return self
     }
@@ -291,7 +291,7 @@ extension CKFetch {
     ///
     /// - Parameter value: The Boolean value to which the new predicate should evaluate.
     public func having(_ value: Bool) -> Self {
-        let predicate = CKPredicate(value: value)
+        let predicate = NSPredicate(value: value)
         fetchRequest.havingPredicate = predicate
         return self
     }
@@ -303,7 +303,7 @@ extension CKFetch {
     /// - Parameter format: The format string for the new predicate.
     /// - Parameter argumentArray: The arguments to substitute into predicateFormat. Values are substituted in the order they appear in the array.
     public func having(_ format: String, argumentArray: [Any]?) -> Self {
-        let predicate = CKPredicate(format: format, argumentArray: argumentArray)
+        let predicate = NSPredicate(format: format, argumentArray: argumentArray)
         fetchRequest.havingPredicate = predicate
         return self
     }
@@ -313,7 +313,7 @@ extension CKFetch {
     /// If a `havingPredicate` value is supplied, the predicate will be run after .Specifying a havingPredicate requires that propertiesToGroupBy also be specified.
     ///
     /// - Parameter predicate: The predicate instance constrains the selection of objects the `FetchRequest` instance is to fetch.
-    public func having(_ predicate: CKPredicate) -> Self {
+    public func having(_ predicate: NSPredicate) -> Self {
         fetchRequest.havingPredicate = predicate
         return self
     }
@@ -322,8 +322,8 @@ extension CKFetch {
     ///
     /// If a `havingPredicate` value is supplied, the predicate will be run after .Specifying a havingPredicate requires that propertiesToGroupBy also be specified.
     ///
-    /// - Parameter clause: `Where` clause to create a `FetchRequest` with.
-    public func having(_ clause: Where<Object>) -> Self {
+    /// - Parameter clause: `CKPredicate` clause to create a `FetchRequest` with.
+    public func having(_ clause: CKPredicate<Object>) -> Self {
         fetchRequest.havingPredicate = clause.predicate
         return self
     }

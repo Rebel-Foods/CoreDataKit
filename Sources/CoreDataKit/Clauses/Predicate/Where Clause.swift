@@ -1,5 +1,5 @@
 //
-//  Where Clause.swift
+//  CKPredicate Clause.swift
 //  CoreDataKit
 //
 //  Created by Raghav Ahuja on 18/10/19.
@@ -30,9 +30,9 @@ public protocol WhereClause {
     
     /// The predicate of the fetch request.
     /// - Parameter predicate: The predicate instance constrains the selection of objects the `FetchRequest` instance is to fetch.
-    func `where`(_ predicate: CKPredicate?) -> Self
+    func `where`(_ predicate: NSPredicate?) -> Self
     
     /// The predicate of the fetch request.
-    /// - Parameter clause: `Where` clause to create a `FetchRequest` with.
-    func `where`(_ clause: Where<Object>) -> Self
+    /// - Parameter clause: `CKPredicate` clause to create a `FetchRequest` with.
+    func `where`(_ clause: CKPredicate<Object>) -> Self
 }
