@@ -292,28 +292,25 @@ open class Keychain {
 // MARK: ACCESSIBILITY
 extension Keychain {
     
-    public struct Accessibility: RawRepresentable {
+    /// Keychain Accessibility options.
+    public struct Accessibility {
         
-        public typealias RawValue = CFString
+        var attributeValue: CFString
 
-        var attributeValue: CFString { rawValue }
-
-        public let rawValue: CFString
-
-        public init?(rawValue: CFString) {
-            self.rawValue = rawValue
+        private init(rawValue: CFString) {
+            self.attributeValue = rawValue
         }
 
         /// The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user.
         ///
         /// After the first unlock, the data remains accessible until the next restart. This is recommended for items that need to be accessed by background applications. Items with this attribute migrate to a new device when using encrypted backups.
-        public static let afterFirstUnlock = Accessibility(rawValue: kSecAttrAccessibleAfterFirstUnlock)!
+        public static let afterFirstUnlock = Accessibility(rawValue: kSecAttrAccessibleAfterFirstUnlock)
         
 
         /// The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user.
         ///
         /// After the first unlock, the data remains accessible until the next restart. This is recommended for items that need to be accessed by background applications. Items with this attribute do not migrate to a new device. Thus, after restoring from a backup of a different device, these items will not be present.
-        public static let afterFirstUnlockThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)!
+        public static let afterFirstUnlockThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)
 
         
         /// The data in the keychain item can always be accessed regardless of whether the device is locked.
@@ -323,19 +320,19 @@ extension Keychain {
         @available(iOS, introduced: 4.0, deprecated: 12.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlock")
         @available(tvOS, introduced: 4.0, deprecated: 12.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlock")
         @available(watchOS, introduced: 2.0, deprecated: 5.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlock")
-        public static let always = Accessibility(rawValue: kSecAttrAccessibleAlways)!
+        public static let always = Accessibility(rawValue: kSecAttrAccessibleAlways)
         
 
         /// The data in the keychain can only be accessed when the device is unlocked. Only available if a passcode is set on the device.
         ///
         /// This is recommended for items that only need to be accessible while the application is in the foreground. Items with this attribute never migrate to a new device. After a backup is restored to a new device, these items are missing. No items can be stored in this class on devices without a passcode. Disabling the device passcode causes all items in this class to be deleted.
-        public static let whenPasscodeSetThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly)!
+        public static let whenPasscodeSetThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly)
         
 
         /// The data in the keychain item can always be accessed regardless of whether the device is locked.
         ///
         /// This is not recommended for application use. Items with this attribute do not migrate to a new device. Thus, after restoring from a backup of a different device, these items will not be present.
-        public static let alwaysThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleAlwaysThisDeviceOnly)!
+        public static let alwaysThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleAlwaysThisDeviceOnly)
 
 
         /// The data in the keychain item can be accessed only while the device is unlocked by the user.
@@ -343,7 +340,7 @@ extension Keychain {
         /// This is recommended for items that need to be accessible only while the application is in the foreground. Items with this attribute migrate to a new device when using encrypted backups.
         ///
         /// This is the default value for keychain items added without explicitly setting an accessibility constant.
-        public static let whenUnlocked = Accessibility(rawValue: kSecAttrAccessibleWhenUnlocked)!
+        public static let whenUnlocked = Accessibility(rawValue: kSecAttrAccessibleWhenUnlocked)
         
         
         /// The data in the keychain item can be accessed only while the device is unlocked by the user.
@@ -353,6 +350,6 @@ extension Keychain {
         @available(iOS, introduced: 4.0, deprecated: 12.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlockThisDeviceOnly")
         @available(tvOS, introduced: 4.0, deprecated: 12.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlockThisDeviceOnly")
         @available(watchOS, introduced: 2.0, deprecated: 5.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlockThisDeviceOnly")
-        public static let whenUnlockedThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleWhenUnlockedThisDeviceOnly)!
+        public static let whenUnlockedThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleWhenUnlockedThisDeviceOnly)
     }
 }
