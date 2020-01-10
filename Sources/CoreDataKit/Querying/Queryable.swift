@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if canImport(UIKit)
+import CoreGraphics.CGGeometry
+#endif
 
 // MARK: - CKQueryable
 

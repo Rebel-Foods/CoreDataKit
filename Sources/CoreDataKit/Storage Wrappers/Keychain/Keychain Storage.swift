@@ -14,14 +14,18 @@ public struct KeychainStorage<Value: CKQueryable> {
     private let key: String
     private var value: Value
     
+    var hasValue: Bool
+    
     public init<Key: StorageKeys>(key k: Key, initialValue v: Value) {
         key = k.key
         value = v
+        hasValue = Keychain.standard.data(for: key) != nil
     }
     
     public init(key k: String, initialValue v: Value) {
         key = k
         value = v
+        hasValue = Keychain.standard.data(for: key) != nil
     }
     
     public var wrappedValue: Value {
@@ -37,10 +41,20 @@ public struct KeychainStorage<Value: CKQueryable> {
         set {
             do {
                 let data = try newValue.ckEncode()
-                if Keychain.standard.set(data, for: key) {
-                    value = newValue
+                if hasValue {
+                    if Keychain.standard.update(data, for: key) {
+                        value = newValue
+                    }
+                    else {
+                        print("Cannot update value for key: \(key) in Keychain.")
+                    }
                 } else {
-                    print("Cannot save value for key: \(key) in Keychain.")
+                    hasValue = true
+                    if Keychain.standard.set(data, for: key) {
+                        value = newValue
+                    } else {
+                        print("Cannot save value for key: \(key) in Keychain.")
+                    }
                 }
             } catch {
                 print("Cannot save value for key: \(key).\nError: \(error as NSError)")

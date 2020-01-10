@@ -8,12 +8,12 @@
 
 import Foundation
 
-open class UserDefault: UserDefaults {
+open class UserDefaults: Foundation.UserDefaults {
     
-    private static let shared = UserDefault()
+    private static let `default` = UserDefaults()
     
-    open override class var standard: UserDefault {
-        shared
+    open override class var standard: UserDefaults {
+        .default
     }
     
     open func set<Key: StorageKeys>(_ value: Any?, for key: Key) {
@@ -33,8 +33,8 @@ open class UserDefault: UserDefaults {
         return UserDefaults.standard.value(forKey: key.key)
     }
     
-    open func stringValue<Key: StorageKeys>(for key: Key) -> String {
-        return UserDefaults.standard.string(forKey: key.key) ?? "nil"
+    open func stringValue<Key: StorageKeys>(for key: Key) -> String? {
+        return UserDefaults.standard.string(forKey: key.key)
     }
     
     open func intValue<Key: StorageKeys>(for key: Key) -> Int {

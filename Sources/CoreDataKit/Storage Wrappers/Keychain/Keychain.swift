@@ -9,29 +9,11 @@
 import Foundation
 
 open class Keychain {
-    public enum KeychainAccessibility: CaseIterable {
-        case afterFirstUnlock
-        case afterFirstUnlockThisDeviceOnly
-        case always
-        case whenPasscodeSetThisDeviceOnly
-        case alwaysThisDeviceOnly
-        case whenUnlocked
-        case whenUnlockedThisDeviceOnly
-        
-        public var keychainAttributeValue: CFString {
-            switch self {
-            case .afterFirstUnlock: return kSecAttrAccessibleAfterFirstUnlock
-            case .afterFirstUnlockThisDeviceOnly: return kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-            case .always: return kSecAttrAccessibleAlways
-            case .whenPasscodeSetThisDeviceOnly: return kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
-            case .alwaysThisDeviceOnly: return kSecAttrAccessibleAlwaysThisDeviceOnly
-            case .whenUnlocked: return kSecAttrAccessibleWhenUnlocked
-            case .whenUnlockedThisDeviceOnly: return kSecAttrAccessibleWhenUnlockedThisDeviceOnly
-            }
-        }
-    }
     
-    public static let standard = Keychain()
+    private static let `default` = Keychain()
+    open class var standard: Keychain {
+        .default
+    }
     
     private var serviceName: String
     private var accessGroup: String?
@@ -48,7 +30,7 @@ open class Keychain {
     /// - parameter for: The key to check for.
     /// - parameter accessibility: Optional accessibility to use when retrieving the keychain item.
     /// - returns: True if a value exists for the key. False otherwise.
-    open func hasValue(for key: String, withAccessibility accessibility: KeychainAccessibility? = nil) -> Bool {
+    open func hasValue(for key: String, withAccessibility accessibility: Accessibility = .whenUnlocked) -> Bool {
         if let _ = data(for: key, accessibility: accessibility) {
             return true
         } else {
@@ -58,7 +40,7 @@ open class Keychain {
     
     // MARK: Public Getters
     
-    open func integer(for key: String, withAccessibility accessibility: KeychainAccessibility? = nil) -> Int? {
+    open func integer(for key: String, withAccessibility accessibility: Accessibility = .whenUnlocked) -> Int? {
         guard let numberValue = object(for: key, accessibility: accessibility) as? NSNumber else {
             return nil
         }
@@ -66,7 +48,7 @@ open class Keychain {
         return numberValue.intValue
     }
     
-    open func float(for key: String, withAccessibility accessibility: KeychainAccessibility? = nil) -> Float? {
+    open func float(for key: String, withAccessibility accessibility: Accessibility = .whenUnlocked) -> Float? {
         guard let numberValue = object(for: key, accessibility: accessibility) as? NSNumber else {
             return nil
         }
@@ -74,7 +56,7 @@ open class Keychain {
         return numberValue.floatValue
     }
     
-    open func double(for key: String, withAccessibility accessibility: KeychainAccessibility? = nil) -> Double? {
+    open func double(for key: String, withAccessibility accessibility: Accessibility = .whenUnlocked) -> Double? {
         guard let numberValue = object(for: key, accessibility: accessibility) as? NSNumber else {
             return nil
         }
@@ -82,7 +64,7 @@ open class Keychain {
         return numberValue.doubleValue
     }
     
-    open func bool(for key: String, accessibility: KeychainAccessibility? = nil) -> Bool? {
+    open func bool(for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool? {
         guard let numberValue = object(for: key, accessibility: accessibility) as? NSNumber else {
             return nil
         }
@@ -95,7 +77,7 @@ open class Keychain {
     /// - parameter for: The key to lookup data for.
     /// - parameter accessibility: Optional accessibility to use when retrieving the keychain item.
     /// - returns: The String associated with the key if it exists. If no data exists, or the data found cannot be encoded as a string, returns nil.
-    open func string(for key: String, accessibility: KeychainAccessibility? = nil) -> String? {
+    open func string(for key: String, accessibility: Accessibility = .whenUnlocked) -> String? {
         guard let keychainData = data(for: key, accessibility: accessibility) else {
             return nil
         }
@@ -108,7 +90,7 @@ open class Keychain {
     /// - parameter for: The key to lookup data for.
     /// - parameter accessibility: Optional accessibility to use when retrieving the keychain item.
     /// - returns: The decoded object associated with the key if it exists. If no data exists, or the data found cannot be decoded, returns nil.
-    open func object(for key: String, accessibility: KeychainAccessibility? = nil) -> NSCoding? {
+    open func object(for key: String, accessibility: Accessibility = .whenUnlocked) -> NSCoding? {
         guard let keychainData = data(for: key, accessibility: accessibility) else {
             return nil
         }
@@ -122,7 +104,7 @@ open class Keychain {
     /// - parameter for: The key to lookup data for.
     /// - parameter accessibility: Optional accessibility to use when retrieving the keychain item.
     /// - returns: The Data object associated with the key if it exists. If no data exists, returns nil.
-    open func data(for key: String, accessibility: KeychainAccessibility? = nil) -> Data? {
+    open func data(for key: String, accessibility: Accessibility = .whenUnlocked) -> Data? {
         var keychainQueryDictionary = setupKeychainQueryDictionary(for: key, accessibility: accessibility)
         
         // Limit search results to one
@@ -140,19 +122,19 @@ open class Keychain {
     
     // MARK: Public Setters
     
-    @discardableResult open func set(_ value: Int, for key: String, accessibility: KeychainAccessibility? = nil) -> Bool {
+    @discardableResult open func set(_ value: Int, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         return set(NSNumber(value: value), for: key, accessibility: accessibility)
     }
     
-    @discardableResult open func set(_ value: Float, for key: String, accessibility: KeychainAccessibility? = nil) -> Bool {
+    @discardableResult open func set(_ value: Float, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         return set(NSNumber(value: value), for: key, accessibility: accessibility)
     }
     
-    @discardableResult open func set(_ value: Double, for key: String, accessibility: KeychainAccessibility? = nil) -> Bool {
+    @discardableResult open func set(_ value: Double, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         return set(NSNumber(value: value), for: key, accessibility: accessibility)
     }
     
-    @discardableResult open func set(_ value: Bool, for key: String, accessibility: KeychainAccessibility? = nil) -> Bool {
+    @discardableResult open func set(_ value: Bool, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         return set(NSNumber(value: value), for: key, accessibility: accessibility)
     }
     
@@ -162,7 +144,7 @@ open class Keychain {
     /// - parameter for: The key to save the String under.
     /// - parameter accessibility: Optional accessibility to use when setting the keychain item.
     /// - returns: True if the save was successful, false otherwise.
-    @discardableResult open func set(_ value: String, for key: String, accessibility: KeychainAccessibility? = nil) -> Bool {
+    @discardableResult open func set(_ value: String, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         if let data = value.data(using: .utf8) {
             return set(data, for: key, accessibility: accessibility)
         } else {
@@ -176,7 +158,7 @@ open class Keychain {
     /// - parameter for: The key to save the object under.
     /// - parameter accessibility: Optional accessibility to use when setting the keychain item.
     /// - returns: True if the save was successful, false otherwise.
-    @discardableResult open func set(_ value: NSCoding, for key: String, accessibility: KeychainAccessibility? = nil) -> Bool {
+    @discardableResult open func set(_ value: NSCoding, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         let data = NSKeyedArchiver.archivedData(withRootObject: value)
         
         return set(data, for: key, accessibility: accessibility)
@@ -188,16 +170,12 @@ open class Keychain {
     /// - parameter for: The key to save the object under.
     /// - parameter accessibility: Optional accessibility to use when setting the keychain item.
     /// - returns: True if the save was successful, false otherwise.
-    @discardableResult open func set(_ value: Data, for key: String, accessibility: KeychainAccessibility? = nil) -> Bool {
+    @discardableResult open func set(_ value: Data, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         var keychainQueryDictionary = setupKeychainQueryDictionary(for: key, accessibility: accessibility)
         
         keychainQueryDictionary[kSecValueData] = value
         
-        if let accessibility = accessibility {
-            keychainQueryDictionary[kSecAttrAccessible] = accessibility.keychainAttributeValue
-        } else {
-            keychainQueryDictionary[kSecAttrAccessible] = KeychainAccessibility.whenUnlocked.keychainAttributeValue
-        }
+        keychainQueryDictionary[kSecAttrAccessible] = accessibility.attributeValue
         
         let status: OSStatus = SecItemAdd(keychainQueryDictionary as CFDictionary, nil)
         
@@ -215,7 +193,7 @@ open class Keychain {
     /// - parameter for: The key value to remove data for.
     /// - parameter accessibility: Optional accessibility level to use when looking up the keychain item.
     /// - returns: True if successful, false otherwise.
-    @discardableResult open func removeObject(for key: String, accessibility: KeychainAccessibility? = nil) -> Bool {
+    @discardableResult open func removeObject(for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         let keychainQueryDictionary = setupKeychainQueryDictionary(for: key, accessibility: accessibility)
         
         // Delete
@@ -270,14 +248,11 @@ open class Keychain {
     }
     
     /// Update existing data associated with a specified key name. The existing data will be overwritten by the new data.
-    private func update(_ value: Data, for key: String, accessibility: KeychainAccessibility? = nil) -> Bool {
+    func update(_ value: Data, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         var keychainQueryDictionary = setupKeychainQueryDictionary(for: key, accessibility: accessibility)
         let updateDictionary = [kSecValueData: value]
         
-        // on update, only set accessibility if passed in
-        if let accessibility = accessibility {
-            keychainQueryDictionary[kSecAttrAccessible] = accessibility.keychainAttributeValue
-        }
+        keychainQueryDictionary[kSecAttrAccessible] = accessibility.attributeValue
         
         // Update
         let status: OSStatus = SecItemUpdate(keychainQueryDictionary as CFDictionary, updateDictionary as CFDictionary)
@@ -294,15 +269,13 @@ open class Keychain {
     /// - parameter for: The key this query is for
     /// - parameter accessibility: Optional accessibility to use when setting the keychain item. If none is provided, will default to .WhenUnlocked
     /// - returns: A dictionary with all the needed properties setup to access the keychain on iOS
-    private func setupKeychainQueryDictionary(for key: String, accessibility: KeychainAccessibility? = nil) -> [CFString: Any] {
+    private func setupKeychainQueryDictionary(for key: String, accessibility: Accessibility) -> [CFString: Any] {
         // Setup default access as generic password (rather than a certificate, internet password, etc)
         var keychainQueryDictionary: [CFString: Any] = [kSecClass: kSecClassGenericPassword]
         
         keychainQueryDictionary[kSecAttrService] = serviceName
         
-        if let accessibility = accessibility {
-            keychainQueryDictionary[kSecAttrAccessible] = accessibility.keychainAttributeValue
-        }
+        keychainQueryDictionary[kSecAttrAccessible] = accessibility.attributeValue
         
         if let accessGroup = self.accessGroup {
             keychainQueryDictionary[kSecAttrAccessGroup] = accessGroup
@@ -313,5 +286,73 @@ open class Keychain {
         keychainQueryDictionary[kSecAttrAccount] = encodedIdentifier
         
         return keychainQueryDictionary
+    }
+}
+
+// MARK: ACCESSIBILITY
+extension Keychain {
+    
+    public struct Accessibility: RawRepresentable {
+        
+        public typealias RawValue = CFString
+
+        var attributeValue: CFString { rawValue }
+
+        public let rawValue: CFString
+
+        public init?(rawValue: CFString) {
+            self.rawValue = rawValue
+        }
+
+        /// The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user.
+        ///
+        /// After the first unlock, the data remains accessible until the next restart. This is recommended for items that need to be accessed by background applications. Items with this attribute migrate to a new device when using encrypted backups.
+        public static let afterFirstUnlock = Accessibility(rawValue: kSecAttrAccessibleAfterFirstUnlock)!
+        
+
+        /// The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user.
+        ///
+        /// After the first unlock, the data remains accessible until the next restart. This is recommended for items that need to be accessed by background applications. Items with this attribute do not migrate to a new device. Thus, after restoring from a backup of a different device, these items will not be present.
+        public static let afterFirstUnlockThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)!
+
+        
+        /// The data in the keychain item can always be accessed regardless of whether the device is locked.
+        ///
+        /// This is not recommended for application use. Items with this attribute migrate to a new device when using encrypted backups.
+        @available(macOS, introduced: 10.9, deprecated: 10.14, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlock")
+        @available(iOS, introduced: 4.0, deprecated: 12.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlock")
+        @available(tvOS, introduced: 4.0, deprecated: 12.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlock")
+        @available(watchOS, introduced: 2.0, deprecated: 5.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlock")
+        public static let always = Accessibility(rawValue: kSecAttrAccessibleAlways)!
+        
+
+        /// The data in the keychain can only be accessed when the device is unlocked. Only available if a passcode is set on the device.
+        ///
+        /// This is recommended for items that only need to be accessible while the application is in the foreground. Items with this attribute never migrate to a new device. After a backup is restored to a new device, these items are missing. No items can be stored in this class on devices without a passcode. Disabling the device passcode causes all items in this class to be deleted.
+        public static let whenPasscodeSetThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly)!
+        
+
+        /// The data in the keychain item can always be accessed regardless of whether the device is locked.
+        ///
+        /// This is not recommended for application use. Items with this attribute do not migrate to a new device. Thus, after restoring from a backup of a different device, these items will not be present.
+        public static let alwaysThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleAlwaysThisDeviceOnly)!
+
+
+        /// The data in the keychain item can be accessed only while the device is unlocked by the user.
+        ///
+        /// This is recommended for items that need to be accessible only while the application is in the foreground. Items with this attribute migrate to a new device when using encrypted backups.
+        ///
+        /// This is the default value for keychain items added without explicitly setting an accessibility constant.
+        public static let whenUnlocked = Accessibility(rawValue: kSecAttrAccessibleWhenUnlocked)!
+        
+        
+        /// The data in the keychain item can be accessed only while the device is unlocked by the user.
+        ///
+        /// This is recommended for items that need to be accessible only while the application is in the foreground. Items with this attribute do not migrate to a new device. Thus, after restoring from a backup of a different device, these items will not be present.
+        @available(macOS, introduced: 10.9, deprecated: 10.14, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlockThisDeviceOnly")
+        @available(iOS, introduced: 4.0, deprecated: 12.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlockThisDeviceOnly")
+        @available(tvOS, introduced: 4.0, deprecated: 12.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlockThisDeviceOnly")
+        @available(watchOS, introduced: 2.0, deprecated: 5.0, message: "Use an accessibility level that provides some user protection, such as afterFirstUnlockThisDeviceOnly")
+        public static let whenUnlockedThisDeviceOnly = Accessibility(rawValue: kSecAttrAccessibleWhenUnlockedThisDeviceOnly)!
     }
 }
