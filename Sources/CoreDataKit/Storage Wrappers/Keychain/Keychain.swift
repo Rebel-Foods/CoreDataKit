@@ -248,7 +248,7 @@ open class Keychain {
     }
     
     /// Update existing data associated with a specified key name. The existing data will be overwritten by the new data.
-    func update(_ value: Data, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
+    open func update(_ value: Data, for key: String, accessibility: Accessibility = .whenUnlocked) -> Bool {
         var keychainQueryDictionary = setupKeychainQueryDictionary(for: key, accessibility: accessibility)
         let updateDictionary = [kSecValueData: value]
         

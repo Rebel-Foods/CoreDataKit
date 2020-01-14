@@ -14,12 +14,12 @@ public struct CodableUserStorage<Value: Codable> {
     private let key: String
     private var value: Value
     
-    public init<Key: StorageKeys>(key k: Key, v: Value) {
+    public init<Key: StorageKeys>(key k: Key, initialValue v: Value) {
         key = k.key
         value = v
     }
     
-    public init(key k: String, v: Value) {
+    public init(key k: String, initialValue v: Value) {
         key = k
         value = v
     }

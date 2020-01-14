@@ -10,4 +10,5 @@ import Foundation
 
 protocol CKContainerType: class {
     init(with name: String)
+    func updateContexts()
 }

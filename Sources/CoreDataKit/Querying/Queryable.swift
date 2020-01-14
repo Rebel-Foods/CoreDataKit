@@ -489,13 +489,28 @@ extension NSNumber: CKQueryable {
     
     @inline(__always)
     public func ckEncode() throws -> Data {
-        NSKeyedArchiver.archivedData(withRootObject: self)
+        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *) {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+            return data
+        } else {
+            let data = NSKeyedArchiver.archivedData(withRootObject: self)
+            return data
+        }
     }
     
     @inline(__always)
     public class func ckDecode(data: Data) throws -> Self {
-        let object = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)
-        return object as! Self
+        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *) {
+            guard let object = try NSKeyedUnarchiver.unarchivedObject(ofClass: Self.self, from: data) else {
+                throw NSError.cannotDecode
+            }
+            return object
+        } else {
+            guard let object = NSKeyedUnarchiver.unarchiveObject(with: data) as? Self else {
+                throw NSError.cannotDecode
+            }
+            return object
+        }
     }
 }
 
@@ -803,13 +818,28 @@ extension CKObjectId: CKQueryable {
     
     @inline(__always)
     public func ckEncode() throws -> Data {
-        NSKeyedArchiver.archivedData(withRootObject: self)
+        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *) {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+            return data
+        } else {
+            let data = NSKeyedArchiver.archivedData(withRootObject: self)
+            return data
+        }
     }
     
     @inline(__always)
     public class func ckDecode(data: Data) throws -> Self {
-        let object = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)
-        return object as! Self
+        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *) {
+            guard let object = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [Self.self], from: data) as? Self else {
+                throw NSError.cannotDecode
+            }
+            return object
+        } else {
+            guard let object = NSKeyedUnarchiver.unarchiveObject(with: data) as? Self else {
+                throw NSError.cannotDecode
+            }
+            return object
+        }
     }
 }
 
@@ -832,13 +862,28 @@ extension NSNull: CKQueryable {
     
     @inline(__always)
     public func ckEncode() throws -> Data {
-        NSKeyedArchiver.archivedData(withRootObject: self)
+        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *) {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+            return data
+        } else {
+            let data = NSKeyedArchiver.archivedData(withRootObject: self)
+            return data
+        }
     }
     
     @inline(__always)
     public class func ckDecode(data: Data) throws -> Self {
-        let object = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data)
-        return object as! Self
+        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *) {
+            guard let object = try NSKeyedUnarchiver.unarchivedObject(ofClass: Self.self, from: data) else {
+                throw NSError.cannotDecode
+            }
+            return object
+        } else {
+            guard let object = NSKeyedUnarchiver.unarchiveObject(with: data) as? Self else {
+                throw NSError.cannotDecode
+            }
+            return object
+        }
     }
 }
 

@@ -321,7 +321,7 @@ extension CKContext {
         } else if let fetchError = error {
             throw fetchError
         } else {
-            throw NSError(domain: CoreDataKit.errorDomain, code: 101, userInfo: nil)
+            throw NSError(domain: NSError.errorDomain, code: 101, userInfo: nil)
         }
     }
 }
@@ -379,7 +379,7 @@ extension CKContext {
         } else if let fetchError = error {
             throw fetchError
         } else {
-            throw NSError(domain: CoreDataKit.errorDomain, code: 101, userInfo: nil)
+            throw NSError(domain: NSError.errorDomain, code: 101, userInfo: nil)
         }
     }
 }
@@ -410,7 +410,7 @@ extension CKContext {
         } else if let fetchError = error {
             throw fetchError
         } else {
-            throw NSError(domain: CoreDataKit.errorDomain, code: 101, userInfo: nil)
+            throw NSError(domain: NSError.errorDomain, code: 101, userInfo: nil)
         }
     }
 }

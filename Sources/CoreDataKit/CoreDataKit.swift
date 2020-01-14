@@ -10,8 +10,6 @@ import Foundation
 
 public class CoreDataKit {
     
-    static var errorDomain = "CKErrorDomain"
-    
     /// The default instance with database name being application's name.
     private static let `internalDefault` = CoreDataKit()
     

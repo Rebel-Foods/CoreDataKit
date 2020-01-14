@@ -49,7 +49,7 @@ extension CKBaseStack: CKStoreDescriptionMethods {
         
         persistentContainer.persistentStoreCoordinator.performAndWait {
             
-            persistentContainer.loadPersistentStores { (storeDescription, error) in
+            persistentContainer.loadPersistentStores { [weak self] (storeDescription, error) in
                 
                 if let error = error as NSError? {
                     CoreDataKit.default.logger.log(error: error)
@@ -71,6 +71,8 @@ extension CKBaseStack: CKStoreDescriptionMethods {
                      Check the error message to determine what the actual problem was.
                      */
                     CoreDataKit.default.logger.fatalError("Unresolved error \(error), \(error.userInfo)")
+                } else {
+                    self?.persistentContainer.updateContexts()
                 }
             }
         }
